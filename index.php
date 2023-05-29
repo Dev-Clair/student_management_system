@@ -11,10 +11,18 @@ $members = json_decode($data, true);
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the form data and clean the values using the trim and strip_tags functions
+    // Retrieve the form data and clean the values using clean_name/class/grade functions
     $name = clean_name($_POST['name']);
     $class = clean_class($_POST['class']);
     $grade = clean_grade($_POST['grade']);
+
+    // Validate userinput using the validate_name/class/grade functions
+    if (!validate_name($name) || !validate_class($class) || !validate_grade($grade)) {
+        // Display error message and redirect to index.php after 5 seconds
+        header('Refresh: 5; URL=index.php');
+        echo "Oops! Something went wrong and we couldn't add the record.\nMake sure you follow the help-info and grade must be between 0-10 when you try again";
+        exit;
+    }
 
     // Generate the registration number using the time() function
     $regNo = time(); // The registration number will serve as the student's primary key
@@ -34,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updatedRecord = json_encode($members, JSON_PRETTY_PRINT);
     file_put_contents($filePath, $updatedRecord);
 
-    // Redirect back to index.php
-    $address = 'index.php';
+    // Redirect back to index.php with succsss message
+    $address = 'index.php?success=1';
     redirect_to($address);
     exit;
 }
@@ -77,6 +85,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
 </head>
 
 <body class="my-5 mb-5">
+    <?php
+    if (isset($_GET['success'])) {
+        if ($_GET['success'] == 1)
+            // echo success message to user:
+            echo "Success!";
+    }
+    ?>
 
     <div class="container">
         <div class="float-end mt-2">

@@ -10,11 +10,19 @@ $members = json_decode($data, true);
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the form data and clean the values using the trim and strip_tags functions
+    // Retrieve the form data and clean the values using clean_name/class/grade functions
     $regNo = $_POST['regNo'];
     $name = clean_name($_POST['name']);
     $class = clean_class($_POST['class']);
     $grade = clean_grade($_POST['grade']);
+
+    // Revalidate userinput using the validate_name/class/grade functions
+    if (!validate_name($name) || !validate_class($class) || !validate_grade($grade)) {
+        // Display error message and redirect to index.php after 5 seconds
+        header('Refresh: 5; URL=update.php');
+        echo "Oops! Something went wrong and we couldn't update the record.\nMake sure you follow the help-info and grade must be between 0-10 when you try again";
+        exit;
+    }
 
     // Search for the member with the matching registration number
     foreach ($members as $key => $member) {
@@ -32,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents($filePath, $updatedRecord);
 
     // Redirect back to index.php
-    $address = 'index.php';
+    $address = 'index.php?success=1';
     redirect_to($address);
     exit;
 }
@@ -65,6 +73,13 @@ if (isset($_GET['regNo'])) {
 </head>
 
 <body class="my-5">
+    <?php
+    if (isset($_GET['success'])) {
+        if ($_GET['success'] == 1)
+            // echo success message to user:
+            echo "Success!";
+    }
+    ?>
     <div class="container">
         <h2><strong>Update Student Record</strong></h2>
         <form method="post" action="update.php">

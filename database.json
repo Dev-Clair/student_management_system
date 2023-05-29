@@ -75,7 +75,7 @@
         "name": "Jon Snow",
         "class": "art",
         "regNo": 1685281640,
-        "grade": "4"
+        "grade": "5"
     },
     "14": {
         "name": "Cindy Chan",
@@ -184,5 +184,59 @@
         "class": "art",
         "regNo": 1685381583,
         "grade": "7"
+    },
+    "32": {
+        "name": "Oleksander Zinchenko",
+        "class": "commerce",
+        "regNo": 1685382841,
+        "grade": "9"
+    },
+    "33": {
+        "name": "Jefferson John",
+        "class": "stem",
+        "regNo": 1685384663,
+        "grade": "8"
+    },
+    "34": {
+        "name": "Sergio-Kun Aguero",
+        "class": "art",
+        "regNo": 1685385507,
+        "grade": "5"
+    },
+    "35": {
+        "name": "Wayne Ruby",
+        "class": "stem",
+        "regNo": 1685386831,
+        "grade": "7"
+    },
+    "36": {
+        "name": "Jane Roberts",
+        "class": "stem",
+        "regNo": 1685388728,
+        "grade": "7"
+    },
+    "37": {
+        "name": "Titus Simons",
+        "class": "art",
+        "regNo": 1685388843,
+        "grade": "5"
+    },
+    "38": {
+        "name": "Jeff Peterson",
+        "class": "art",
+        "regNo": 1685390180,
+        "grade": "7"
+    },
+    "39": {
+        "name": "Kennedy Oley",
+        "class": "commerce",
+        "regNo": 1685390448,
+        "grade": "8"
+    },
+    "40": {
+        "name": "Joe Barnes",
+        "class": "art",
+        "regNo": 1685390820,
+        "grade": "6"
     }
 }

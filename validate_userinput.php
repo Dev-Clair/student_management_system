@@ -12,16 +12,16 @@ function clean_name($name): string
 }
 
 /** VALIDATE_NAME CLASS */
-function validate_name($formatted_name): string
+function validate_name($formatted_name): bool
 {
     /**
-     * Validates userinput using the ctype_alpha function
+     * Validates userinput using a regular expression
      * @param string - $formatted_name
      * returns true or false
      */
-    if (!ctype_alpha($formatted_name))
-        return "false";
-    return "true";
+    if (!preg_match('/^[a-zA-Z ]+$/', $formatted_name))
+        return false;
+    return true;
 }
 
 /** VALIDATE_CLASS CLASS */
@@ -36,7 +36,7 @@ function clean_class($class): string
 }
 
 /** VALIDATE_CLASS CLASS */
-function validate_class($formatted_class): string
+function validate_class($formatted_class): bool
 {
     /**
      * Validates userinput by searching if userinput is in a defined list of allowed values
@@ -44,9 +44,9 @@ function validate_class($formatted_class): string
      * returns true or false
      */
     $allowed_values = ["stem", "commerce", "art"];
-    if (!in_array($formatted_class, $allowed_values))
-        return "false";
-    return "true";
+    if (in_array($formatted_class, $allowed_values))
+        return true;
+    return false;
 }
 
 /** VALIDATE_GRADE CLASS */
@@ -61,16 +61,17 @@ function clean_grade($grade): string
 }
 
 /** VALIDATE_GRADE CLASS */
-function validate_grade($formatted_grade): string
+function validate_grade($formatted_grade): bool
 {
     /**
      * Validates userinput using a comparison condition
      * @param string - $formatted_grade
      * returns true or false
      */
+    $formatted_grade = (int)$formatted_grade;
     if ($formatted_grade < 0 || $formatted_grade > 10)
-        return "false";
-    return "true";
+        return false;
+    return true;
 }
 
 function redirect_to($page_name)
