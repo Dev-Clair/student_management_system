@@ -6,8 +6,8 @@ The Student Records Management System is a simple web application built using PH
 
 - Add new students with their name, class, registration number -assigned internally using the php in-built time() function-, and grade.
 - View a list of all students with their details.
-- Delete students from the records.
-- Update student information.
+- Delete student's from the records.
+- Update student's information.
 
 ## Installation
 
