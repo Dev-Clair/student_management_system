@@ -1,5 +1,8 @@
 <?php
 
+// Import file containing functions for validating userinput
+require_once "validate_userinput.php";
+
 $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'database.json';
 
 // Read the database file
@@ -67,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <title>Student Records</title>
 </head>
 
@@ -83,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     </div>
 
     <section class="wrapper-main">
-        <!-- List the users -->
+        <!-- List student record -->
         <div class="container table-wrapper">
             <table class="table table-striped table-bordered mt-4">
                 <thead class="thead-dark">

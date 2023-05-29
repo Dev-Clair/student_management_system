@@ -1,4 +1,7 @@
 <?php
+// Import file containing functions for validating userinput
+require_once "validate_userinput.php";
+
 $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'database.json';
 
 // Read the database file
@@ -56,7 +59,7 @@ if (isset($_GET['regNo'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <title>Update Student</title>
 </head>
 
