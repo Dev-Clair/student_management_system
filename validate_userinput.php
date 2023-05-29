@@ -1,10 +1,10 @@
 <?php
 
-/** VALIDATE_NAME CLASS */
+/** CLEAN_NAME CLASS */
 function clean_name($name): string
 {
     /**
-     * Cleans and formats userinput using the trim, strim_tags and ucwords functions
+     * Cleans and formats userinput using the trim, strip_tags and ucwords functions
      * @param string - $name
      * returns string
      */
@@ -24,11 +24,11 @@ function validate_name($formatted_name): bool
     return true;
 }
 
-/** VALIDATE_CLASS CLASS */
+/** CLEAN_CLASS CLASS */
 function clean_class($class): string
 {
     /**
-     * Cleans and formats userinput using the trim, strim_tags and strtolower functions
+     * Cleans and formats userinput using the trim, strip_tags and strtolower functions
      * @param string - $class
      * returns string
      */
@@ -49,11 +49,11 @@ function validate_class($formatted_class): bool
     return false;
 }
 
-/** VALIDATE_GRADE CLASS */
+/** CLEAN_GRADE CLASS */
 function clean_grade($grade): string
 {
     /**
-     * Cleans and formats userinput using the trim and strim_tags functions
+     * Cleans and formats userinput using the trim and strip_tags functions
      * @param string - $name
      * returns string
      */
