@@ -31,7 +31,7 @@ function validate_grade($grade): bool
     return "";
 }
 
-function redirect_to($page_nzmr): string
+function redirect_to($page_name): string
 {
     /**
      * redirects to page name passed as argument
