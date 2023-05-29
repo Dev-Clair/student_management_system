@@ -12,9 +12,9 @@ $members = json_decode($data, true);
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the form data and clean the values using the trim and strip_tags functions
-    $name = ucwords(trim(strip_tags($_POST['name'])));
-    $class = strtolower(trim(strip_tags($_POST['class'])));
-    $grade = trim(strip_tags($_POST['grade']));
+    $name = clean_name($_POST['name']);
+    $class = clean_class($_POST['class']);
+    $grade = clean_grade($_POST['grade']);
 
     // Generate the registration number using the time() function
     $regNo = time(); // The registration number will serve as the student's primary key
@@ -35,7 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents($filePath, $updatedRecord);
 
     // Redirect back to index.php
-    header('Location: index.php');
+    $address = 'index.php';
+    redirect_to($address);
     exit;
 }
 
@@ -57,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     file_put_contents($filePath, $updatedRecord);
 
     // Redirect back to index.php
-    header('Location: index.php');
+    $address = 'index.php';
+    redirect_to($address);
     exit;
 }
 

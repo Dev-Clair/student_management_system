@@ -12,9 +12,9 @@ $members = json_decode($data, true);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the form data and clean the values using the trim and strip_tags functions
     $regNo = $_POST['regNo'];
-    $name = ucwords(trim(strip_tags($_POST['name'])));
-    $class = strtolower(trim(strip_tags($_POST['class'])));
-    $grade = trim(strip_tags($_POST['grade']));
+    $name = clean_name($_POST['name']);
+    $class = clean_class($_POST['class']);
+    $grade = clean_grade($_POST['grade']);
 
     // Search for the member with the matching registration number
     foreach ($members as $key => $member) {
@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     file_put_contents($filePath, $updatedRecord);
 
     // Redirect back to index.php
-    header('Location: index.php');
+    $address = 'index.php';
+    redirect_to($address);
     exit;
 }
 
