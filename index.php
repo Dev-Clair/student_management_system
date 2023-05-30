@@ -1,52 +1,9 @@
 <?php
 
-// Import file containing functions for validating userinput
-require_once "validate_userinput.php";
+// Import file for cleaning, validating  and processing userinput
+require_once "form_handler.php";
 
 $filePath = __DIR__ . DIRECTORY_SEPARATOR . 'database.json';
-
-// Read the database file
-$data = file_get_contents($filePath);
-$members = json_decode($data, true);
-
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the form data and clean the values using clean_name/class/grade functions
-    $name = clean_name($_POST['name']);
-    $class = clean_class($_POST['class']);
-    $grade = clean_grade($_POST['grade']);
-
-    // Validate userinput using the validate_name/class/grade functions
-    if (!validate_name($name) || !validate_class($class) || !validate_grade($grade)) {
-        // Display error message and redirect to index.php after 5 seconds
-        header('Refresh: 5; URL=index.php');
-        echo "Oops! Something went wrong and we couldn't add the record.\nMake sure you follow the help-info and grade must be between 0-10 when you try again";
-        exit;
-    }
-
-    // Generate the registration number using the time() function
-    $regNo = time(); // The registration number will serve as the student's primary key
-
-    // Create a new member record
-    $newMember = array(
-        'name' => $name,
-        'class' => $class,
-        'regNo' => $regNo,
-        'grade' => $grade
-    );
-
-    // Add the new member to the array
-    $members[] = $newMember;
-
-    // Save the updated records back to the file
-    $updatedRecord = json_encode($members, JSON_PRETTY_PRINT);
-    file_put_contents($filePath, $updatedRecord);
-
-    // Redirect back to index.php with succsss message
-    $address = 'index.php?success=1';
-    redirect_to($address);
-    exit;
-}
 
 // Check if the delete action is requested
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['regNo'])) {
@@ -158,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="index.php">
+                    <form method="post" action="form_handler.php">
                         <!-- Name Field -->
                         <div>
                             <label for="name" class="form-label"><strong>Name:</strong></label>

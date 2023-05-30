@@ -159,7 +159,7 @@
         "name": "Elizabeth Kyle",
         "class": "commerce",
         "regNo": 1685364513,
-        "grade": "6"
+        "grade": "10"
     },
     "28": {
         "name": "Loveth Chizoba",
@@ -207,7 +207,7 @@
         "name": "Wayne Ruby",
         "class": "stem",
         "regNo": 1685386831,
-        "grade": "7"
+        "grade": "10"
     },
     "36": {
         "name": "Jane Roberts",
@@ -219,7 +219,7 @@
         "name": "Titus Simons",
         "class": "art",
         "regNo": 1685388843,
-        "grade": "5"
+        "grade": "6"
     },
     "38": {
         "name": "Jeff Peterson",
@@ -238,5 +238,35 @@
         "class": "art",
         "regNo": 1685390820,
         "grade": "6"
+    },
+    "41": {
+        "name": "Megan Jeffrey",
+        "class": "stem",
+        "regNo": 1685446275,
+        "grade": "8"
+    },
+    "42": {
+        "name": "Alli Mudu",
+        "class": "art",
+        "regNo": 1685446304,
+        "grade": "10"
+    },
+    "43": {
+        "name": "Sam McConough",
+        "class": "commerce",
+        "regNo": 1685446337,
+        "grade": "8"
+    },
+    "44": {
+        "name": "Rucky Jones",
+        "class": "stem",
+        "regNo": 1685446693,
+        "grade": "5"
+    },
+    "45": {
+        "name": "Sully Jordan",
+        "class": "commerce",
+        "regNo": 1685446721,
+        "grade": "7"
     }
 }
