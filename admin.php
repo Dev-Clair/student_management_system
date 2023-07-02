@@ -1,4 +1,11 @@
 <?php
+// require resource: Connection Object
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbSource.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbController.php';
+
+$connection = new DbConnection($serverName = "localhost", $userName = "root", $password = "", $database = "");
+$conn = $connection->getConnection();
+$operation = new DbTableOps($conn);
 
 ?>
 
@@ -13,8 +20,14 @@
     <title>Jagaad Academy</title>
 </head>
 
-<body class="">
+<body class="container-fluid">
+    <h1>Admin</h1>
 
+
+    <!-- Footer -->
+    <footer class="container-fluid">
+        <small>&copy; 2023 jagaad academy</small>
+    </footer>
 </body>
 
 </html>

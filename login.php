@@ -1,4 +1,11 @@
 <?php
+// require resource: Connection Object
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbSource.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbController.php';
+
+$connection = new DbConnection($serverName = "localhost", $userName = "root", $password = "", $database = "");
+$conn = $connection->getConnection();
+$operation = new DbTableOps($conn);
 
 ?>
 
@@ -9,9 +16,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login</title>
-  <!-- Pico.css -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
-  <!-- Custom styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 

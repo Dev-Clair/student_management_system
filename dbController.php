@@ -5,7 +5,7 @@
  * Requires Resource
  * to Create Tables in Database.
  */
-class CreateTable
+class DbTable
 {
     private ?mysqli $conn;
 
@@ -111,7 +111,7 @@ class CreateTable
  * Requires Resource
  * to Execute Various Table Read and Write Operations.
  */
-class DatabaseTableOperations
+class DbTableOps
 {
     private ?mysqli $conn;
 
