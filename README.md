@@ -1,6 +1,6 @@
 # Student Records Management System
 
-The Student Records Management System is a simple web application built using PHP and JSON file storage. It allows you to manage student records, including adding new students, updating their information, and deleting records.
+The Student Records Management System is a simple web application built using PHP and MYSQL. It allows you to manage student records, including adding new students, updating their information, and deleting records.
 
 ## Features
 
@@ -13,9 +13,7 @@ The Student Records Management System is a simple web application built using PH
 
 1. Clone the repository via HTTPS or SSH.
 2. Make sure you have PHP installed on your system.
-3. Start the PHP built-in server in the directory - cloned repository: `php -S localhost:8800 -t .`.
-4. Open the application in your browser: [http://localhost:8800/index.php](http://localhost:8800/index.php).
-5. Make sure you have an internet connection as the styling and responsiveness of the page depends on a CDN: Content Delivery Network.
+3. Make sure you have an internet connection as the styling and responsiveness of the page depends on a CDN: Content Delivery Network.
 
 ## Usage
 
@@ -26,8 +24,8 @@ The Student Records Management System is a simple web application built using PH
 ## Technologies
 
 - PHP: Server-side scripting language used for handling data and rendering views.
-- JSON: File-based storage used to store the student records.
-- Bootstrap: Front-end framework for responsive and modern user interface design.
+- MYSQL: File-based storage used to store the student records.
+- PICO CSS: Front-end framework for responsive and modern user interface design.
 
 ## Contributing
 
