@@ -1,7 +1,9 @@
-  <!-- Footer -->
-  <footer class="container-fluid">
-      <small>&copy; 2023 jagaad academy</small>
-  </footer>
-  </body>
+</main>
 
-  </html>
+<footer class="fixed-bottom bg-secondary text-white mb-1 py-1">
+  <strong><small>&copy; 2023 jagaad academy</small></strong>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,66 +1,37 @@
 <?php
-// require resource: Connection Object
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbSource.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbController.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
+$connection = connection();
 
-$connection = new DbConnection($serverName = "localhost", $userName = "root", $password = "", $database = "");
-$conn = $connection->getConnection();
-$operation = new DbTableOps($conn);
-
+// Form Handling: Validation, Processing and Submission
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-
-<body class="container-fluid">
-  <header class="container-fluid">
-    <!-- Nav -->
-    <nav>
-      <ul>
-        <li>
-          <a href="./" class="contrast" onclick="event.preventDefault()"><strong>Home</strong></a>
-          <a href="./" class="contrast" onclick="event.preventDefault()"><strong>Alumni</strong></a>
-          <a href="./" class="contrast" onclick="event.preventDefault()"><strong>About</strong></a>
-        </li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Main -->
-  <main class="container">
-    <article class="grid">
-      <div>
-        <h1>Sign in</h1>
-        <form>
-          <label for="login">Login ID:</label>
-          <input type="text" name="login" id="login" placeholder="Enter Login ID" aria-label="Login" />
-          <label for="password">Password:</label>
-          <input type="password" name="password" id="password" placeholder="Enter Password" aria-label="Password" />
-          <fieldset>
-            <label for="remember">
-              <input type="checkbox" role="switch" id="remember" name="remember" />
-              Remember me
-            </label>
-          </fieldset>
-          <button type="submit" class="contrast">Login</button>
-        </form>
+<?php
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
+?>
+<!-- Form -->
+<section>
+  <div class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
+    <h1 class="mb-4">Sign in</h1>
+    <form method="get" , action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+      <div class="form-group mb-3">
+        <label for="login" class="form-label">Login ID:</label>
+        <input type="text" name="login" id="login" class="form-control" placeholder="Enter Login ID" value="" />
       </div>
-      <div></div>
-    </article>
-  </main>
+      <div class="formgroup mb-3">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password" value="" />
+      </div>
+      <div class="formgroup mb-3">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="remember" name="remember" value="" />
+          <label class="form-check-label" for="remember">Remember me</label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+  </div>
+</section>
 
-  <!-- Footer -->
-  <footer class="container-fluid">
-    <small>&copy; 2023 jagaad academy</small>
-  </footer>
-</body>
-
-</html>
+<?php
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/footer.php';
+?>
