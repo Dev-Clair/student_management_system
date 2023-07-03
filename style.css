@@ -17,9 +17,43 @@
 }
 
 @media (max-width: 700px) {
-  .l-container,
-  .r-container {
+  .left-container,
+  .right-container {
     width: 100%;
     float: none;
   }
+}
+
+.report-card {
+  border: 1px solid #ccc;
+  margin: 10px;
+  padding: 10px;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.report-name {
+  font-weight: bold;
+}
+
+.report-rating {
+  text-align: center;
+}
+
+.report-date {
+  text-align: right;
+}
+
+.review-text {
+  margin-top: 10px;
+}
+
+#studentReport {
+  height: 500px;
+  overflow: auto;
 }
