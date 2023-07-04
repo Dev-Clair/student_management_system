@@ -13,13 +13,13 @@
     <header class="fixed-top bg-secondary my-1 py-3">
         <!-- Nav -->
         <nav class="btn-grp">
-            <a href="./" class="btn text-white ml-5 mr-5"><strong>HOME</strong></a>
-            <a href="./" class="btn text-white ml-5 mr-5"><strong>ACADEMICS</strong></a>
-            <a href="./" class="btn text-white ml-5 mr-5"><strong>ABOUT US</strong></a>
-            <a href="./" class="btn text-white ml-5 mr-5"><strong>UNITS</strong></a>
-            <a href="./" class="btn text-white ml-5 mr-5"><strong>RESEARCH</strong></a>
-            <a href="./" class="btn text-white ml-5 mr-5"><strong>RESOURCES</strong></a>
-            <a href="./" class="btn text-white ml-5 mr-5"><strong>DONATIONS</strong></a>
+            <a href="./" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>HOME</strong></a>
+            <a href="./about.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>ABOUT</strong></a>
+            <a href="./academics.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>ACADEMICS US</strong></a>
+            <a href="./units.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>UNITS</strong></a>
+            <a href="./research.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>RESEARCH</strong></a>
+            <a href="./resources.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>RESOURCES</strong></a>
+            <a href="./donations.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>DONATIONS</strong></a>
         </nav>
     </header>
 

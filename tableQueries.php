@@ -1,7 +1,7 @@
 <?php
 // require resource: Connection Object
-require_once __DIR__ . DIRECTORY_SEPARATOR . './DbConnection/dbConnection.php';
-$connection = connection();
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
+$connection = dbTableConnection();
 
 /** *******************************************Create Tables***************************************** */
 $tableName = "";

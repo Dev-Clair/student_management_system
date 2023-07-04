@@ -1,4 +1,4 @@
-/* stylesheet.css */
+/* global styles */
 
 .left-container {
   flex: 1;
@@ -24,32 +24,139 @@
   }
 }
 
-.report-card {
+/*indexstyles */
+
+.modal-dialog {
+  width: 100%;
+  margin-left: 10px;
+  padding-left: 10px;
+  min-width: 100%;
+  overflow: auto;
+}
+
+.scrollable-container {
+  width: fit-content;
+  height: 550px;
+  overflow: auto;
+}
+
+.table-wrapper {
+  flex: 1;
+  /* overflow-x: auto;
+  overflow-y: auto; */
+  text-align: center;
+}
+
+.table thead th {
+  background-color: #83faf9;
+  color: #000;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #35fae0;
+  color: #000;
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: white;
+}
+
+.table td:nth-child(3) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table td:nth-child(11) {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table td:nth-child(12) {
+  white-space: normal;
+  word-wrap: break-word;
+  max-height: 3em;
+  overflow: hidden;
+}
+
+.btn-group {
+  display: flex;
+  gap: 2px;
+}
+
+/* .btn {
+  color: #000;
+  padding: 3px 3px;
+  text-align: center;
+} */
+
+.btn-primary {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #0d6e0d;
+  border-color: #0d6e0d;
+}
+
+.btn-danger {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+/* reportstyles */
+
+.studentCard {
   border: 1px solid #ccc;
   margin: 10px;
   padding: 10px;
 }
 
-.report-header {
+.studentHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.report-name {
+.studentName {
   font-weight: bold;
 }
 
-.report-rating {
+.studentRegNo {
   text-align: center;
 }
 
-.report-date {
+.studentClass {
+  text-align: center;
+}
+
+.courseModule {
+  font-weight: bold;
+}
+
+.moduleExerciseScore {
+  text-align: center;
+}
+
+.moduleProjectScore {
+  text-align: center;
+}
+
+.moduleGrade {
   text-align: right;
 }
 
-.review-text {
+.overallScore {
+  text-align: center;
+}
+
+.studentPerformance {
+  text-align: center;
   margin-top: 10px;
 }
 
