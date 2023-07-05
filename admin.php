@@ -1,7 +1,8 @@
 <?php
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
-$connection = dbTableOpConnection();
+$superConnection = dbTableConnection($databaseName);
+$subConnection = dbTableOpConnection($databaseName);
 ?>
 
 <?php
@@ -24,9 +25,13 @@ if (isset($_GET['ErrorMessage'])) {
 <!-- Class Table -->
 <div class="container table-wrapper">
     <div class="float-end">
-        <!-- Button trigger modal -->
+        <!-- Class Button trigger modal -->
         <button type="button" class="btn btn-primary my-3 mb-3" data-bs-toggle="modal" data-bs-target="#createClassModal">
             Create Class
+        </button>
+        <!-- Module Button trigger modal -->
+        <button type="button" class="btn btn-primary my-3 mb-3" data-bs-toggle="modal" data-bs-target="#createModuleModal">
+            Create Modules
         </button>
     </div>
     <table class="table table-striped table-bordered mt-4">
@@ -43,7 +48,7 @@ if (isset($_GET['ErrorMessage'])) {
         </thead>
         <tbody>
             <?php
-            $records = $connection->retrieveAllRecords("");
+            $records = $subConnection->retrieveAllRecords("");
             if (!empty($records)) {
                 $count = 0;
                 foreach ($records as $row) {
@@ -81,18 +86,57 @@ if (isset($_GET['ErrorMessage'])) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createClassModalLabel"><strong>Create Service</strong> </h5>
+                <h5 class="modal-title" id="createClassModalLabel"><strong>Create Class</strong> </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="serviceForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form id="classForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group">
-                        <label for=""><strong></strong></label>
-                        <input type="text" class="form-control mb-2" id="" name="" autocomplete="off" placeholder="" />
+                        <label for="classname"><strong>Class Name:</strong></label>
+                        <input type="text" class="form-control mb-2" id="classname" name="classname" autocomplete="off" placeholder="Enter class name" />
+                    </div>
+                    <button type="submit" class="float-end btn btn-primary">
+                        Submit
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Module Modal -->
+<div class="modal fade" id="createModuleModal" tabindex="-1" aria-labelledby="createModuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModuleModalLabel"><strong>Create Class Modules</strong> </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="moduleForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <div class=" form-group">
+                        <label for="class"><strong>Select Class:</strong></label>
+                        <select class="form-control mb-2" id="class" name="class">
+                            <option value="">--Click to Select--</option>
+                            <option value="frontend">Frontend</option>
+                            <option value="backend">Backend</option>
+                            <option value="fullstack">Fullstack</option>
+                            <option value="devops">Devops</option>
+                            <option value="cloud">Cloud</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for=""><strong></strong></label>
-                        <input type="text" class="form-control mb-2" id="" name="" autocomplete="off" placeholder="" />
+                        <label for="modulenum"><strong>Module No:</strong></label>
+                        <input type="text" class="form-control mb-2" id="modulenum" name="modulenum" autocomplete="off" placeholder="Enter module number" />
+                    </div>
+                    <div class="form-group">
+                        <label for="moduletitle"><strong>Module Title:</strong></label>
+                        <input type="text" class="form-control mb-2" id="moduletitle" name="moduletitle" autocomplete="off" placeholder="Enter module title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="chaptername"><strong>Chapter Name:</strong></label>
+                        <input type="text" class="form-control mb-2" id="chaptername" name="chaptername" autocomplete="off" placeholder="Enter chapter name" />
                     </div>
                     <div class="form-group">
                         <label for=""><strong></strong></label>
@@ -120,7 +164,6 @@ if (isset($_GET['ErrorMessage'])) {
         </div>
     </div>
 </div>
-
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/footer.php';
 ?>

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
-$connection = dbTableOpConnection();
+$connection = dbTableOpConnection($databaseName);
 ?>
 
 <?php
