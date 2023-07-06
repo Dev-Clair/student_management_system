@@ -103,6 +103,32 @@ class DbTable
         // $this->conn->close(); // Close Connection Object
         return $result === true;
     }
+
+    /**
+     * Retrieves the names of tables in a database as an array containing values only.
+     * @param string $databaseName Name of the database
+     * @return array Array containing the names of tables
+     */
+    public function retrieveTableNames(string $databaseName): array
+    {
+        if ($this->conn === null) {
+            die("No database connection available.");
+        }
+
+        $sql_query = "SHOW TABLES FROM $databaseName";
+        $result = $this->conn->query($sql_query);
+
+        if ($result) {
+            $tableNames = [];
+            while ($row = $result->fetch_row()) {
+                $tableNames[] = $row[0];
+            }
+            $result->close(); // Close Result Object
+            return $tableNames;
+        }
+
+        return [];
+    }
 }
 
 
@@ -261,6 +287,28 @@ class DbTableOps
         // $this->conn->close(); // Close Connection Object
 
         return null;
+    }
+
+    public function retrieveColumnValues(string $tableName, string $columnName): array
+    {
+        if ($this->conn === null) {
+            die("No database connection available.");
+        }
+
+        $sql_query = "SELECT $columnName FROM $tableName";
+        $result = $this->conn->query($sql_query);
+
+        if ($result->num_rows > 0) {
+            $columnValues = [];
+            while ($row = $result->fetch_array(MYSQLI_NUM)) {
+                $columnValues[] = $row[0];
+            }
+            $result->close(); // Close Result Object
+
+            return $columnValues;
+        }
+
+        return [];
     }
 
     public function retrieveSingleRecord(string $tableName, string $fieldName, $fieldValue): array

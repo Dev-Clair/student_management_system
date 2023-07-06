@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
-$connection = dbTableConnection($databaseName);
+$databaseName = "";
+$connection = tableConnection($databaseName);
 
 // Form Handling: Validation, Processing and Submission
 ?>

@@ -9,7 +9,7 @@
     <title>Jagaad Academy</title>
 </head>
 
-<body class="container-fluid pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
+<body class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
     <header class="fixed-top bg-secondary my-1 py-3">
         <!-- Nav -->
         <nav class="btn-grp">

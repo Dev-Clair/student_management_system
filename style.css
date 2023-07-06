@@ -25,13 +25,38 @@
 }
 
 /*indexstyles */
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-left {
+  text-align: left;
+}
+
+.flex-right {
+  text-align: right;
+}
 
 .modal-dialog {
-  width: 100%;
-  margin-left: 10px;
-  padding-left: 10px;
-  min-width: 100%;
-  overflow: auto;
+  width: 50%;
+  height: 500%;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+.modal-content {
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  flex-grow: 1;
 }
 
 .scrollable-container {
@@ -124,6 +149,7 @@
 }
 
 .studentName {
+  text-align: left;
   font-weight: bold;
 }
 
@@ -131,8 +157,8 @@
   text-align: center;
 }
 
-.studentClass {
-  text-align: center;
+.studentCourse {
+  text-align: right;
 }
 
 .courseModules {
