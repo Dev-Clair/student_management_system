@@ -7,7 +7,6 @@ $connection = dbTableOpConnection($databaseName);
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 ?>
-
 <!-- Success and Error Alert -->
 <?php
 if (isset($_GET['SuccessMessage'])) {

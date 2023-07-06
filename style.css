@@ -162,6 +162,7 @@
 }
 
 .courseModules {
+  text-align: left;
   font-weight: bold;
 }
 
@@ -170,11 +171,11 @@
 }
 
 .moduleProjectScores {
-  text-align: center;
+  text-align: right;
 }
 
 .courseGrade {
-  text-align: right;
+  text-align: left;
 }
 
 .overallScore {
@@ -182,7 +183,7 @@
 }
 
 .studentPerformance {
-  text-align: center;
+  text-align: right;
   margin-top: 10px;
 }
 
