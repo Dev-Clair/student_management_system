@@ -135,19 +135,19 @@
   text-align: center;
 }
 
-.courseModule {
+.courseModules {
   font-weight: bold;
 }
 
-.moduleExerciseScore {
+.moduleExerciseScores {
   text-align: center;
 }
 
-.moduleProjectScore {
+.moduleProjectScores {
   text-align: center;
 }
 
-.moduleGrade {
+.courseGrade {
   text-align: right;
 }
 

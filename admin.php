@@ -1,8 +1,8 @@
 <?php
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
-$superConnection = dbTableConnection($databaseName);
-$subConnection = dbTableOpConnection($databaseName);
+$databaseName = "``";
+$connection = dbTableOpConnection($databaseName);
 ?>
 
 <?php
@@ -81,18 +81,18 @@ if (isset($_GET['ErrorMessage'])) {
     </table>
 </div>
 
-<!-- New Class Modal -->
-<div class="modal fade" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
+<!-- New Course Modal -->
+<div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createClassModalLabel"><strong>Create Class</strong> </h5>
+                <h5 class="modal-title" id="createCourseModalLabel"><strong>Create Course</strong> </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="classForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group">
-                        <label for="classname"><strong>Class Name:</strong></label>
+                        <label for="classname"><strong>Select Course:</strong></label>
                         <input type="text" class="form-control mb-2" id="classname" name="classname" autocomplete="off" placeholder="Enter class name" />
                     </div>
                     <button type="submit" class="float-end btn btn-primary">

@@ -10,7 +10,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-function newDb(string $databaseName): bool
+function dbConnection(string $databaseName): bool
 {
     $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
     $conn = $connection->getConnection();
@@ -22,7 +22,7 @@ function newDb(string $databaseName): bool
     }
 }
 
-function dbTableConnection(string $databaseName): DbTable
+function tableConnection(string $databaseName): DbTable
 {
     $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"], $databaseName);
     $conn = $connection->getConnection();

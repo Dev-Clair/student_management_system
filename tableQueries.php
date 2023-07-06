@@ -1,30 +1,51 @@
 <?php
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
-$superConnection = dbTableConnection($databaseName);
+
+/** *******************************************Create Databases***************************************** */
+$databaseName = "`student`";
+print_r(dbConnection($databaseName));
+
+$databaseName = "`course`";
+print_r(dbConnection($databaseName));
+
+$databaseName = "`modules`";
+print_r(dbConnection($databaseName));
 
 /** *******************************************Create Tables***************************************** */
-$tableName = "";
+$databaseName = "``";
+$tableName = "``";
 $fieldNames = ", `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
+// $connection = tableConnection($databaseName);
 // print_r($connection->createTable($tableName, $fieldNames));
 
-$tableName = "";
+$databaseName = "``";
+$tableName = "``";
 $fieldNames = "";
+// $connection = tableConnection($databaseName);
 // print_r($connection->createTable($tableName, $fieldNames));
 
-$tableName = "";
-$fieldNames = "";
+$databaseName = "``";
+$tableName = "``";
+$fieldNames = "``";
+// $connection = tableConnection($databaseName);
 // print_r($connection->createTable($tableName, $fieldNames));
 
 /** *******************************************Alter Tables***************************************** */
-$tableName = "";
+$databaseName = "``";
+$tableName = "``";
 $statement = "ADD COLUMN `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER" . "";
+// $connection = tableConnection($databaseName);
 // print_r($connection->alterTable($tableName, $statement));
 
 /** *******************************************Truncate Tables***************************************** */
-$tableName = "";
+$databaseName = "``";
+$tableName = "``";
+// $connection = tableConnection($databaseName);
 // print_r($connection->truncateTable($tableName));
 
 /** *******************************************Drop Tables***************************************** */
-$tableName = "";
+$databaseName = "``";
+$tableName = "``";
+// $connection = tableConnection($databaseName);
 // print_r($connection->dropTable($tableName));

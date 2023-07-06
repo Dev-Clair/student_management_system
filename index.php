@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
+$databaseName = "``";
 $connection = dbTableOpConnection($databaseName);
 ?>
 
@@ -69,11 +70,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                             <div class="studentRegNo"><strong>Reg. No.:</strong> <?php echo ""; ?></div>
                             <div class="studentClass"><strong>Class:</strong> <?php echo ""; ?></div>
 
-                            <div class="courseModule"><strong>Module:</strong> <?php echo ""; ?></div>
-                            <div class="moduleExerciseScore"><strong>Exercise Score:</strong> <?php echo ""; ?></div>
-                            <div class="moduleProjectScore"><strong>Project Score:</strong> <?php echo ""; ?></div>
+                            <div class="courseModules"><strong>Course Modules:</strong> <?php echo ""; ?>/6</div>
+                            <div class="moduleExerciseScores"><strong>Exercise Scores:</strong> <?php echo ""; ?></div>
+                            <div class="moduleProjectScores"><strong>Project Scores:</strong> <?php echo ""; ?></div>
 
-                            <div class="moduleGrade"><strong>Module Grade:</strong> <?php echo "" ?>/10</div>
+                            <div class="courseGrade"><strong>Course Grade:</strong> <?php echo "" ?>/10</div>
                             <div class="overallScore"><strong>Overall Score (Module):</strong> <?php echo "" ?></div>
                         </div>
                         <div class="studentPerformance"><strong>Overall Performance:</strong> <?php echo ""; ?></div>
