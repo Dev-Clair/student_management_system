@@ -5,21 +5,24 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 /** *******************************************Create Databases***************************************** */
 $databaseName = "grade";
 // print_r(dbConnection($databaseName));
-// echo "\n";
+echo "\n";
 
 $databaseName = "student";
 // print_r(dbConnection($databaseName));
-// echo "\n";
+echo "\n";
 
 $databaseName = "course";
 // print_r(dbConnection($databaseName));
-// echo "\n";
+echo "\n";
 
 $databaseName = "module";
 // print_r(dbConnection($databaseName));
-// echo "\n";
+echo "\n";
+
 
 /** *******************************************Create Tables***************************************** */
+/** ******* Grade Database Tables*******/
+
 $tableNames = array("frontend", "backend", "fullstack", "devops", "cloud");
 $fieldNames = "`studentname` VARCHAR(50) NOT NULL,
                `coursename` VARCHAR(100) NOT NULL,
@@ -30,17 +33,19 @@ $fieldNames = "`studentname` VARCHAR(50) NOT NULL,
                `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
 
 $databaseName = "grade";
-foreach ($tableNames as $tableName) {
-    $connection = tableConnection($databaseName);
-    $result = $connection->createTable("`$tableName`", $fieldNames);
-    echo "Creating table $tableName: ";
-    if ($result) {
-        echo "Success";
-    } else {
-        echo "Failure";
-    }
-    echo "\n";
-}
+// foreach ($tableNames as $tableName) {
+//     $conn = tableConnection($databaseName);
+//     $dbTable = new DbTable($conn);
+//     $result = $dbTable->createTable("`$tableName`", $fieldNames);
+//     echo "Creating table $tableName: ";
+//     if ($result) {
+//         echo "Success\n";
+//     } else {
+//         echo "Failure\n";
+//     }
+// }
+
+/********* Student Database Tables*******/
 
 $tableNames = array("frontend", "backend", "fullstack", "devops", "cloud");
 $fieldNames = "`studentname` VARCHAR(50) NOT NULL,
@@ -49,17 +54,19 @@ $fieldNames = "`studentname` VARCHAR(50) NOT NULL,
                `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
 
 $databaseName = "student";
-foreach ($tableNames as $tableName) {
-    $connection = tableConnection($databaseName);
-    $result = $connection->createTable("`$tableName`", $fieldNames);
-    echo "Creating table $tableName: ";
-    if ($result) {
-        echo "Success";
-    } else {
-        echo "Failure";
-    }
-    echo "\n";
-}
+// foreach ($tableNames as $tableName) {
+//     $conn = tableConnection($databaseName);
+//     $dbTable = new DbTable($conn);
+//     $result = $dbTable->createTable("`$tableName`", $fieldNames);
+//     echo "Creating table $tableName: ";
+//     if ($result) {
+//         echo "Success\n";
+//     } else {
+//         echo "Failure\n";
+//     }
+// }
+
+/** ******* Course Database Table*******/
 
 $tableName = "modules";
 $fieldNames = "`coursename` VARCHAR(100) NOT NULL,
@@ -68,9 +75,16 @@ $fieldNames = "`coursename` VARCHAR(100) NOT NULL,
                 `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
 
 $databaseName = "course";
-$connection = tableConnection($databaseName);
-print_r($connection->createTable("`$tableName`", $fieldNames));
-echo "\n";
+// $conn = tableConnection($databaseName);
+// $dbTable = new DbTable($conn);
+// $result = $dbTable->createTable("`$tableName`", $fieldNames);
+// if ($result) {
+//         echo "Success\n";
+//     } else {
+//         echo "Failure\n";
+//     }
+
+/** ******* Module Database Table*******/
 
 $tableName = "chapters";
 $fieldNames = "`modulename` VARCHAR(100) NOT NULL,
@@ -79,25 +93,36 @@ $fieldNames = "`modulename` VARCHAR(100) NOT NULL,
                 `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
 
 $databaseName = "module";
-$connection = tableConnection($databaseName);
-print_r($connection->createTable("`$tableName`", $fieldNames));
-echo "\n";
+// $conn = tableConnection($databaseName);
+// $dbTable = new DbTable($conn);
+// $result = $dbTable->createTable("`$tableName`", $fieldNames);
+// if ($result) {
+//         echo "Success\n";
+//     } else {
+//         echo "Failure\n";
+//     }
+
 
 /** *******************************************Alter Tables***************************************** */
-$databaseName = "``";
-$tableName = "``";
-$statement = "ADD COLUMN `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER" . "";
-// $connection = tableConnection($databaseName);
-// print_r($connection->alterTable($tableName, $statement));
+$databaseName = "";
+$tableName = "";
+$alterStatement = "ADD COLUMN `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER" . "";
+// $conn = tableConnection($databaseName);
+// $dbTable = new DbTable($conn);
+// $result = $dbTable->alterTable("`$tableName`", $alterStatement);
+
 
 /** *******************************************Truncate Tables***************************************** */
-$databaseName = "``";
-$tableName = "``";
-// $connection = tableConnection($databaseName);
-// print_r($connection->truncateTable($tableName));
+$databaseName = "";
+$tableName = "";
+// $conn = tableConnection($databaseName);
+// $dbTable = new DbTable($conn);
+// $result = $dbTable->truncateTable("`$tableName`");
+
 
 /** *******************************************Drop Tables***************************************** */
-$databaseName = "``";
-$tableName = "``";
-// $connection = tableConnection($databaseName);
-// print_r($connection->dropTable($tableName));
+$databaseName = "";
+$tableName = "";
+// $conn = tableConnection($databaseName);
+// $dbTable = new DbTable($conn);
+// $result = $dbTable->dropTable("`$tableName`");

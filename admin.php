@@ -1,6 +1,21 @@
 <?php
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['submitstudentForm'])) {
+        // Student Form Processing
+    }
+
+    if (isset($_POST['submitmoduleForm'])) {
+        // Module Form Processing
+    }
+
+    if (isset($_POST['submitchapterForm'])) {
+        // Chapter Form Processing
+    }
+}
+
 ?>
 
 <?php
@@ -49,13 +64,16 @@ if (isset($_GET['ErrorMessage'])) {
         <tbody>
             <?php
             // retrieves tablenames in database
-            $databaseName = "student";
-            $connection = tableConnection($databaseName);
-            // $tableNames = $connection->retrieveTableNames($databaseName);
-            // $tableName = $tableNames[0];
+            // $databaseName = "student";
+            // $conn = tableConnection($databaseName);
+            // $conn = new DbTable($conn);
+            // $tableNames = $conn->retrieveTableNames($databaseName);
+            // $tableName = $tableNames[1];
+            $tableName = "backend";
             // displays table based on tablename
-            $connection = dbTableOpConnection($databaseName);
-            // $records = $connection->retrieveAllRecords("$tableName");
+            $conn = tableOpConnection($databaseName);
+            $conn = new DbTableOps($conn);
+            $records = $conn->retrieveAllRecords("$tableName");
             if (!empty($records)) {
                 $count = 0;
                 foreach ($records as $row) {
@@ -94,7 +112,7 @@ if (isset($_GET['ErrorMessage'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="classForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form id="studentForm" name="studentForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group">
                         <label class="mb-2" for="studentname"><strong>Name:</strong></label>
                         <input type="text" class="form-control mb-2" id="studentname" name="studentname" autocomplete="off" placeholder="Enter name" />
@@ -110,7 +128,7 @@ if (isset($_GET['ErrorMessage'])) {
                             <option value="cloud">Cloud</option>
                         </select>
                     </div>
-                    <button type="submit" class="float-end btn btn-primary">
+                    <button type="submit" name="submitstudentForm" class="float-end btn btn-primary">
                         Submit
                     </button>
                 </form>
@@ -118,6 +136,7 @@ if (isset($_GET['ErrorMessage'])) {
         </div>
     </div>
 </div>
+
 <!-- New Module Modal -->
 <div class="modal fade" id="createModuleModal" tabindex="-1" aria-labelledby="createModuleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -127,7 +146,7 @@ if (isset($_GET['ErrorMessage'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="moduleForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form id="moduleForm" name="moduleForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group mb-2">
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
                         <select class="form-control mb-2" id="coursename" name="coursename">
@@ -147,7 +166,7 @@ if (isset($_GET['ErrorMessage'])) {
                         <label class="mb-2" for="modulename"><strong>Module Name:</strong></label>
                         <input type="text" class="form-control mb-2" id="modulename" name="modulename" autocomplete="off" placeholder="Enter module name" />
                     </div>
-                    <button type="submit" class="float-end btn btn-primary">Submit</button>
+                    <button type="submit" name="submitmoduleForm" class="float-end btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
@@ -163,16 +182,17 @@ if (isset($_GET['ErrorMessage'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="moduleForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form id="chapterForm" name="chapterForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class=" form-group">
                         <label class="mb-2" for="modulename"><strong>Select Module::</strong></label>
                         <select class="form-control mb-2" id="modulename" name="modulename">
                             <option value="">--Click to Select--</option>
                             <?php
                             $databaseName = "course";
-                            $connection = dbTableOpConnection($databaseName);
+                            $conn = tableOpConnection($databaseName);
+                            $conn = new DbTableOps($conn);
                             $moduleNameColumn = "`modulename`";
-                            // $moduleNameValues = $connection->retrieveColumnValues("`modules`", $moduleNameColumn);
+                            $moduleNameValues = $conn->retrieveColumnValues("modules", $moduleNameColumn);
                             foreach ($moduleNameValues as $moduleName) {
                             ?>
                                 <option value="<?php echo $moduleName; ?>"><?php echo $moduleName; ?></option>
@@ -189,7 +209,7 @@ if (isset($_GET['ErrorMessage'])) {
                         <label class="mb-2" for="chaptername"><strong>Chapter Name:</strong></label>
                         <input type="text" class="form-control mb-2" id="chaptername" name="chaptername" autocomplete="off" placeholder="Enter chapter name" />
                     </div>
-                    <button type="submit" class="float-end btn btn-primary">
+                    <button type="submit" name="submitchapterForm" class="float-end btn btn-primary">
                         Submit
                     </button>
                 </form>
@@ -198,6 +218,7 @@ if (isset($_GET['ErrorMessage'])) {
         </div>
     </div>
 </div>
+
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/footer.php';
 ?>

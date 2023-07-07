@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 $databaseName = "grade";
-$connection = dbTableOpConnection($databaseName);
+$connection = tableOpConnection($databaseName);
 ?>
 
 <?php
@@ -23,11 +23,11 @@ if (isset($_GET['ErrorMessage'])) {
 
 <div class="row">
     <div class="fixed-left left-container pt-2">
-        <h4>Enter Student Grades</h4>
+        <h4>Student Grade</h4>
         <form id="gradeForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label class="form-group mb-2" for="studentname"><strong>Name:</strong></label>
-                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" placeholder="Enter name" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" placeholder="Enter Name" autocomplete="off">
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="coursename"><strong>Select Course:</strong></label>
@@ -41,8 +41,15 @@ if (isset($_GET['ErrorMessage'])) {
                 </select>
             </div>
             <div class="form-group mb-2">
-                <label class="form-group mb-2" for="module"><strong>Module:</strong></label>
+                <label class="form-group mb-2" for="module"><strong>Select Module:</strong></label>
                 <select class="mb-2 form-control" id="module" name="module">
+                    <option value="">--Click to Select--</option>
+                    <option value=""> </option>
+                </select>
+            </div>
+            <div class="form-group mb-2">
+                <label class="form-group mb-2" for="chapter"><strong>Select Chapter:</strong></label>
+                <select class="mb-2 form-control" id="chapter" name="chapter">
                     <option value="">--Click to Select--</option>
                     <option value=""> </option>
                 </select>
@@ -64,7 +71,7 @@ if (isset($_GET['ErrorMessage'])) {
         <div class="flex">
             <div class="flex-left">
                 <strong>
-                    <h4>Download Student Report</h4>
+                    <h4>Student Report</h4>
                 </strong>
             </div>
             <div class="flex-right">

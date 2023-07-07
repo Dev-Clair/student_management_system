@@ -20,12 +20,12 @@ class DbTable
 
     /**
      * @param string $tableName = "Name of table to be created in database"
-     * @param string $columns = "fieldName dataType NULL/NOT NULL ?PRIMARY KEY ?AUTO_INCREMENT, fieldName dataType NULL/NOT NULL ?DEFAULT"
+     * @param string $fieldNames = "fieldName dataType NULL/NOT NULL ?PRIMARY KEY ?AUTO_INCREMENT, fieldName dataType NULL/NOT NULL ?DEFAULT"
      * @return bool True if the table was created successfully, false otherwise
      */
     public function createTable(string $tableName, string $fieldNames): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -36,7 +36,7 @@ class DbTable
             die("Error! Table Creation Failed: " . $this->conn->error);
         }
 
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
         return $result === true;
     }
 
@@ -47,7 +47,7 @@ class DbTable
      */
     public function alterTable(string $tableName, string $alterStatement): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -58,7 +58,7 @@ class DbTable
             die("Error! Process Failed: " . $this->conn->error);
         }
 
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
         return $result === true;
     }
 
@@ -68,7 +68,7 @@ class DbTable
      */
     public function truncateTable(string $tableName): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -79,7 +79,7 @@ class DbTable
             die("Error! Process Failed: " . $this->conn->error);
         }
 
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
         return $result === true;
     }
 
@@ -89,7 +89,7 @@ class DbTable
      */
     public function dropTable(string $tableName): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -100,7 +100,7 @@ class DbTable
             die("Error! Process Failed: " . $this->conn->error);
         }
 
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
         return $result === true;
     }
 
@@ -111,7 +111,7 @@ class DbTable
      */
     public function retrieveTableNames(string $databaseName): array
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -126,7 +126,7 @@ class DbTable
             $result->close(); // Close Result Object
             return $tableNames;
         }
-
+        $this->conn->close(); // Close connection
         return [];
     }
 }
@@ -169,7 +169,7 @@ class DbTableOps
 
     private function getColumnNames(string $tableName): array
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -188,7 +188,7 @@ class DbTableOps
             return [];
         }
 
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
         return $columnNames;
     }
 
@@ -198,7 +198,7 @@ class DbTableOps
      */
     public function createRecords(string $tableName, array $sanitizedData): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -220,14 +220,14 @@ class DbTableOps
         }
 
         $stmt->close(); // Close statement
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
 
         return $status;
     }
 
     public function validateFieldValue(string $tableName, $fieldName, $fieldValue): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -247,7 +247,7 @@ class DbTableOps
 
     public function retrieveAllRecords(string $tableName): array
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -258,17 +258,17 @@ class DbTableOps
             $rows = $result->fetch_all(MYSQLI_ASSOC); // Returns an associative array
             $result->close(); // Close Result Object
 
-            // $this->conn->close(); // Close Connection Object
+            $this->conn->close(); // Close Connection Object
             return $rows;
         }
 
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
         return [];
     }
 
     public function retrieveSingleValue(string $tableName, $fieldName, $fieldValue): int|string|bool|array|null
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -284,14 +284,14 @@ class DbTableOps
         }
 
         $stmt->close(); // Close statement
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
 
         return null;
     }
 
     public function retrieveColumnValues(string $tableName, string $columnName): array
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -307,13 +307,13 @@ class DbTableOps
 
             return $columnValues;
         }
-
+        $this->conn->close(); // Close connection
         return [];
     }
 
     public function retrieveSingleRecord(string $tableName, string $fieldName, $fieldValue): array
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -328,7 +328,7 @@ class DbTableOps
         }
 
         $stmt->close(); // Close statement
-        // $this->conn->close(); // Close Connection Object
+        $this->conn->close(); // Close Connection Object
 
         return [];
     }
@@ -342,7 +342,7 @@ class DbTableOps
      */
     public function updateRecordFields(string $tableName, array $sanitizedData, string $fieldName, $fieldValue): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -366,13 +366,14 @@ class DbTableOps
         $status = $stmt->execute();
 
         $stmt->close(); // Close statement
+        $this->conn->close(); // Close connection
 
         return $status;
     }
 
     public function deleteSingleRecord(string $tableName, string $fieldName, string $fieldValue): bool
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -383,14 +384,14 @@ class DbTableOps
         $status = $stmt->execute();
 
         $stmt->close(); // Close statement
-        // $this->conn->close(); // Close connection
+        $this->conn->close(); // Close connection
 
         return $status;
     }
 
     public function retrieveTableReport(string $tableName, array $tableFields, array $joins, array $joinConditions): array
     {
-        if ($this->conn === null) {
+        if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
@@ -412,11 +413,12 @@ class DbTableOps
         $result = $this->conn->query($sql_query);
 
         if ($result->num_rows > 0) {
-            $rows = $result->fetch_all(MYSQLI_ASSOC); // Returns an associative array
+            $rows = $result->fetch_all(MYSQLI_ASSOC);
             $result->close(); // Close Result Object
             return $rows;
         } else {
-            return []; // Returns an empty array if no rows are found
+            $this->conn->close(); // Close connection
+            return [];
         }
     }
 }

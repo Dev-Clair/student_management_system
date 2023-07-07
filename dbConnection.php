@@ -10,30 +10,40 @@ require_once __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-function dbConnection(string $databaseName): bool
-{
-    $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
-    $conn = $connection->getConnection();
-    $sql_query = "CREATE DATABASE $databaseName";
-    if ($conn->query($sql_query) === true) {
-        return true;
-    } else {
-        throw new Exception('Database creation failed: ' . $conn->error);
-    }
-}
+/******* Create Database ******/
+// function dbConnection(string $databaseName): bool
+// {
+//     $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
+//     $conn = $connection->getConnection();
 
-function tableConnection(string $databaseName): DbTable
+//     if (!is_resource($conn)) {
+//         throw new Exception('Connection failed.');
+//     }
+
+//     $sql_query = "CREATE DATABASE $databaseName";
+//     if ($conn->query($sql_query) === true) {
+//         return true;
+//     } else {
+//         throw new Exception('Database creation failed: ' . $conn->error);
+//     }
+// }
+
+/******* Create Table ******/
+function tableConnection(string $databaseName): ?mysqli
 {
-    $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"], $databaseName);
-    $conn = $connection->getConnection();
-    $conn = new DbTable($conn);
+    $conn = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"], $databaseName);
+    $conn = $conn->getConnection();
+    // $dbTable = new DbTable($conn);
+    // return $dbTable;
     return $conn;
 }
 
-function dbTableOpConnection(string $databaseName): DbTableOps
+/******* Table Read and Write Operations ******/
+function tableOpConnection(string $databaseName): ?mysqli
 {
     $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"], $databaseName);
     $conn = $connection->getConnection();
-    $conn = new DbTableOps($conn);
+    // $dbTableOps = new DbTableOps($conn);
+    // return $dbTableOps;
     return $conn;
 }

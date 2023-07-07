@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Database Connection Class.
- * Establishes Connection
- * and Provides Resource for Database Operations.
- */
 class DbConnection
 {
     private string $serverName;
@@ -14,53 +9,48 @@ class DbConnection
     private ?mysqli $conn;
 
     /**
-     * Constructor,
-     * provides resource: connection object
+     * Constructor, initializes the connection settings.
+     *
+     * @param string $serverName Server name or IP address.
+     * @param string $userName   Database username.
+     * @param string $password   Database password.
+     * @param string|null $database   Database name (optional).
      */
-    public function __construct(string $serverName, string $userName, string $password)
+    public function __construct(string $serverName, string $userName, string $password, ?string $database = null)
     {
         $this->serverName = $serverName;
         $this->userName = $userName;
         $this->password = $password;
-        $this->database = null;
-        $this->connection();
-    }
-
-    public function setDatabase(?string $database)
-    {
         $this->database = $database;
+        $this->connect();
     }
 
-    public function getDatabase(): ?string
+    /**
+     * Establishes resource: the database connection.
+     */
+    private function connect(): void
     {
-        return $this->database;
-    }
-
-    private function connection(): void
-    {
-        $database = $this->getDatabase();
-        if ($database === null) {
-            $this->conn = new mysqli($this->serverName, $this->userName, $this->password);
-        } else {
-            $this->conn = new mysqli($this->serverName, $this->userName, $this->password, $database);
-        }
+        $this->conn = new mysqli($this->serverName, $this->userName, $this->password, $this->database);
 
         if ($this->conn->connect_error) {
             die("Error! Connection Failed: " . $this->conn->connect_error);
         }
     }
 
-
+    /**
+     * Retrieves resource: database connection object.
+     *
+     * @return mysqli|null Database connection object.
+     */
     public function getConnection(): ?mysqli
     {
         return $this->conn;
     }
 
     /**
-     * Destructor,
-     * closes resource: connection object
+     * Closes the resource: database connection.
      */
-    public function __destruct()
+    public function closeConnection(): void
     {
         if ($this->conn !== null) {
             $this->conn->close();
