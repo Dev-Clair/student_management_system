@@ -3,16 +3,39 @@
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['submitstudentForm'])) {
+    if (filter_has_var(INPUT_POST, 'submitstudentForm')) {
         // Student Form Processing
     }
 
-    if (isset($_POST['submitmoduleForm'])) {
+    if (filter_has_var(INPUT_POST, 'submitmoduleForm')) {
         // Module Form Processing
     }
 
-    if (isset($_POST['submitchapterForm'])) {
-        // Chapter Form Processing
+    if (filter_has_var(INPUT_POST, 'submitchapterForm')) {
+        // Chapter Form Validation and Processing
+        $errors = []; // Declare an error array variable
+        $validinputs = []; // Declare an empty  array to store valid form fields
+
+        /**Coursename field */
+        $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
+        $coursename = filter_input(INPUT_POST, 'coursename', FILTER_CALLBACK, array('options' => function ($value) use ($courseoptions) {
+            if (in_array($value, $courseoptions)) {
+                return $value;
+            }
+            return null;
+        }));
+
+        if ($coursename === null) {
+            $errors['coursename'] = "Invalid Option";
+        } else {
+            $validinputs['coursename'] = $coursename;
+        }
+
+        /**ModuleID field */
+        $moduleID = filter_input(INPUT_POST, 'moduleid');
+
+        /**Modulename field */
+        $modulename = filter_input(INPUT_POST, 'modulename');
     }
 }
 

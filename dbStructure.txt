@@ -1,0 +1,29 @@
+Student Performance Management System
+Allows Instructor to enter student exercises and project scores by selecting class/course.
+
+					Frontend
+Form ID: Grade Form
+Form Fields: Name(text), Course(select), Module(select), Chapter(select), Exercise/Project(select), Score(text)
+submits to
+Database: Grade
+Tables: Frontend, Backend, Fullstack, Devops, Clouds
+Fields: StudentName, CourseName, ModuleName, ChapterName-Unique, ExerciseScore, ProjectScore, Grade, Performance
+					
+					Backend
+Form ID: Student Form
+Form Fields: Student Name(text), Reg.No.(assigned internally-Unique), Course(select)
+Database: Student
+Tables: Frontend, Backend, Fullstack, Devops, Clouds
+Fields: StudentName, Reg.No.-Unique, CourseName
+
+Form ID: Module Form
+Form Fields: Course Name(select), ModuleID(text), Module Name(text)
+Database: Course
+Tables: Modules
+Fields: CourseName, ModuleID-Unique, ModuleName-Unique
+
+Form ID: Chapter Form
+Form Fields: Module Name(select), Chapter ID(text), Chapter Name(text)
+Database: Module
+Tables: Chapters
+Fields: ModuleName, ChapterID-Unique, ChapterName-Unique
