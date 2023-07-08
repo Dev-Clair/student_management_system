@@ -92,21 +92,21 @@ $fieldNames = "`modulename` VARCHAR(100) NOT NULL,
                `chaptername` VARCHAR(100) UNIQUE NOT NULL,
                 `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
 
-$databaseName = "module";
+// $databaseName = "module";
 // $conn = tableConnection($databaseName);
 // $dbTable = new DbTable($conn);
 // $result = $dbTable->createTable("`$tableName`", $fieldNames);
 // if ($result) {
-//         echo "Success\n";
-//     } else {
-//         echo "Failure\n";
-//     }
+//     echo "Success\n";
+// } else {
+//     echo "Failure\n";
+// }
 
 
 /** *******************************************Alter Tables***************************************** */
-$databaseName = "";
-$tableName = "";
-$alterStatement = "ADD COLUMN `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER" . "";
+$databaseName = "module";
+$tableName = "chapters";
+$alterStatement = "ADD COLUMN `coursename` VARCHAR(100) NOT NULL FIRST";
 // $conn = tableConnection($databaseName);
 // $dbTable = new DbTable($conn);
 // $result = $dbTable->alterTable("`$tableName`", $alterStatement);

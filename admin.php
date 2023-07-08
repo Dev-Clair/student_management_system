@@ -9,33 +9,135 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (filter_has_var(INPUT_POST, 'submitmoduleForm')) {
         // Module Form Processing
+        $errors = []; // Declare an error array variable
+        $validinputs = []; // Declare an empty  array to store valid form fields
+        $invalidinputs = []; // Declare an empty  array to store invalid form fields
+
+        /**Coursename field */
+        $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
+        $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($coursename !== null && in_array($coursename, $courseoptions)) {
+            $validinputs['coursename'] = $coursename;
+        } else {
+            $errors['coursename'] = "Invalid Option";
+            $invalidinputs['coursename'] = $coursename;
+        }
+
+        /** ModuleID field */
+        $regpattern = '/^[a-zA-Z]+\s{2}[\d]{1}$/';
+        $moduleid = filter_input(INPUT_POST, 'moduleid', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($moduleid !== false && $moduleid !== null) {
+            $validinputs['moduleid'] = $moduleid;
+        } else {
+            $errors['moduleid'] = "Invalid Module ID";
+            $invalidinputs['moduleid'] = $moduleid;
+        }
+
+        /**Modulename field */
+        $regpattern = '/^[a-zA-Z]+*$/';
+        $modulename = filter_input(INPUT_POST, 'modulename', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($modulename !== false && $modulename !== null) {
+            $validinputs['modulename'] = ucwords($modulename);
+        } else {
+            $errors['modulename'] = "Invalid Module Name";
+            $invalidinputs['modulename'] = $modulename;
+        }
+
+        if (!empty($errors)) {
+            // Redirect to admin page with error message
+            $errorMessage = "Invalid Entries";
+            header('Location: admin.php?errorMessage=' . $errorMessage);
+        }
+        // Submits Form Data
+        $databaseName = $validinputs['coursename'];
+        $conn = tableOpConnection($databaseName);
+        $conn = new DbTableOps($conn);
+        $tableName = "";
+        $record = $conn->createRecords("$tableName", $validinputs);
+        if ($record) {
+            // Redirect to admin page with success message
+            $successMessage = "Entry Added Successfully";
+            header('Location: admin.php?successMessage=' . $successMessage);
+        }
     }
 
     if (filter_has_var(INPUT_POST, 'submitchapterForm')) {
         // Chapter Form Validation and Processing
         $errors = []; // Declare an error array variable
         $validinputs = []; // Declare an empty  array to store valid form fields
+        $invalidinputs = []; // Declare an empty  array to store invalid form fields
 
         /**Coursename field */
         $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
-        $coursename = filter_input(INPUT_POST, 'coursename', FILTER_CALLBACK, array('options' => function ($value) use ($courseoptions) {
-            if (in_array($value, $courseoptions)) {
-                return $value;
-            }
-            return null;
-        }));
+        $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if ($coursename === null) {
-            $errors['coursename'] = "Invalid Option";
-        } else {
+        if ($coursename !== null && in_array($coursename, $courseoptions)) {
             $validinputs['coursename'] = $coursename;
+        } else {
+            $errors['coursename'] = "Invalid Option";
+            $invalidinputs['coursename'] = $coursename;
         }
 
-        /**ModuleID field */
-        $moduleID = filter_input(INPUT_POST, 'moduleid');
+        // /** Modulename field */
+        // $moduleoptions = null;
+        // $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        /**Modulename field */
-        $modulename = filter_input(INPUT_POST, 'modulename');
+        // if ($modulename !== null && in_array($modulename, $moduleoptions)) {
+        //     $validinputs['modulename'] = $modulename;
+        // } else {
+        //     $errors['modulename'] = "Invalid Option";
+        //     $invalidinputs['modulename'] = $modulename;
+        // }
+
+        /** ChapterID field */
+        $regpattern = '/^[A-Z]+[\d]+$/';
+        $chapterid = filter_input(INPUT_POST, 'chapterid', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($chapterid !== false && $chapterid !== null) {
+            $validinputs['chapterid'] = $chapterid;
+        } else {
+            $errors['chapterid'] = "Invalid! Can contain cap. letters and numbers only";
+            $invalidinputs['chapterid'] = $chapterid;
+        }
+
+        /** Chaptername field */
+        $regpattern = '/^[a-zA-Z]+*$/';
+        $chaptername = filter_input(INPUT_POST, 'chaptername', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($chaptername !== false && $chaptername !== null) {
+            $validinputs['chaptername'] = ucwords($chaptername);
+        } else {
+            $errors['chaptername'] = "Invalid Chapter Name";
+            $invalidinputs['chaptername'] = $chaptername;
+        }
+
+        if (!empty($errors)) {
+            // Redirect to admin page with error message
+            $errorMessage = "Invalid Entries";
+            header('Location: admin.php?errorMessage=' . $errorMessage);
+        }
+        // Submits Form Data
+        $databaseName = $validinputs['coursename'];
+        $conn = tableOpConnection($databaseName);
+        $conn = new DbTableOps($conn);
+        $tableName = "";
+        $record = $conn->createRecords("$tableName", $validinputs);
+        if ($record) {
+            // Redirect to admin page with success message
+            $successMessage = "Entry Added Successfully";
+            header('Location: admin.php?successMessage=' . $successMessage);
+        }
     }
 }
 
@@ -46,14 +148,14 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 ?>
 <!-- Success and Error Alert -->
 <?php
-if (isset($_GET['SuccessMessage'])) {
-    $successMessage = $_GET['SuccessMessage'];
+if (isset($_GET['successMessage'])) {
+    $successMessage = $_GET['successMessage'];
     echo '<div class="alert alert-success">' . $successMessage . '</div>';
 }
 ?>
 <?php
-if (isset($_GET['ErrorMessage'])) {
-    $errorMessage = $_GET['ErrorMessage'];
+if (isset($_GET['errorMessage'])) {
+    $errorMessage = $_GET['errorMessage'];
     echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
 }
 ?>
@@ -175,19 +277,22 @@ if (isset($_GET['ErrorMessage'])) {
                         <select class="form-control mb-2" id="coursename" name="coursename">
                             <option value="">--Click to Select--</option>
                             <option value="frontend">Frontend</option>
-                            <option value="backend">Backend</option>
+                            <option value="backend>">Backend</option>
                             <option value="fullstack">Fullstack</option>
                             <option value="devops">Devops</option>
                             <option value="cloud">Cloud</option>
                         </select>
+                        <small class="alert alert-danger"><?php echo $errors['coursename'] ?? ''; ?></small>
                     </div>
                     <div class="form-group mb-2">
                         <label class="mb-2" for="moduleid"><strong>Module ID:</strong></label>
-                        <input type="text" class="form-control mb-2" id="moduleid" name="moduleid" autocomplete="off" placeholder="Enter module ID" />
+                        <input type="text" class="form-control mb-2" id="moduleid" name="moduleid" value="<?php echo $invalidinputs['moduleid'] ?? ''; ?>" autocomplete="off" placeholder="Enter module ID" />
+                        <small class="alert alert-danger"><?php echo $errors['moduleid'] ?? ''; ?></small>
                     </div>
                     <div class="form-group mb-2">
                         <label class="mb-2" for="modulename"><strong>Module Name:</strong></label>
-                        <input type="text" class="form-control mb-2" id="modulename" name="modulename" autocomplete="off" placeholder="Enter module name" />
+                        <input type="text" class="form-control mb-2" id="modulename" name="modulename" value="<?php echo $invalidinputs['modulename'] ?? ''; ?>" autocomplete="off" placeholder="Enter module name" />
+                        <small class="alert alert-danger"><?php echo $errors['modulename'] ?? ''; ?></small>
                     </div>
                     <button type="submit" name="submitmoduleForm" class="float-end btn btn-primary">Submit</button>
                 </form>
