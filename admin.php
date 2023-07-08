@@ -180,12 +180,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $record = $conn->createRecords("$tableName", $validinputs);
         if ($record) {
             // Redirect to admin page with success message
-            $successMessage = "Entry Added Successfully";
+            $successMessage = "Entries Added Successfully";
             header('Location: admin.php?successMessage=' . $successMessage);
         }
     }
+    // Redirect to admin page with error message
+    $errorMessage = "Error! Process failed, Please try again.";
+    header('Location: admin.php?errorMessage=' . $errorMessage);
 }
-
 ?>
 
 <?php
@@ -285,7 +287,7 @@ if (isset($_GET['errorMessage'])) {
                 <form id="studentForm" name="studentForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group">
                         <label class="mb-2" for="studentname"><strong>Name:</strong></label>
-                        <input type="text" class="form-control mb-2" id="studentname" name="studentname" autocomplete="off" placeholder="Enter name" />
+                        <input type="text" class="form-control mb-2" id="studentname" name="studentname" value="<?php echo $invalidinputs['studentname'] ?? ''; ?>" autocomplete="off" placeholder="Enter name" />
                         <?php if (isset($errors["studentname"])) { ?>
                             <small class="error-message"><?php echo $errors["studentname"]; ?></small>
                         <?php } ?>

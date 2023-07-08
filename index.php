@@ -63,7 +63,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /** Exercise Score field */
 
         /** Project Score field */
+
+        if (!empty($errors)) {
+            // Redirect to index page with error message
+            $errorMessage = "Invalid Entries";
+            header('Location: index.php?errorMessage=' . $errorMessage);
+        }
+        // Submits Form Data
+        $databaseName = "grade";
+        $conn = tableOpConnection($databaseName);
+        $conn = new DbTableOps($conn);
+        $tableName = $validinputs['coursename'];
+        $record = $conn->createRecords("$tableName", $validinputs);
+        if ($record) {
+            // Redirect to index page with success message
+            $successMessage = "Entries Added Successfully";
+            header('Location: index.php?successMessage=' . $successMessage);
+        }
     }
+    // Redirect to index page with error message
+    $errorMessage = "Error! Process failed, Please try again.";
+    header('Location: admin.php?errorMessage=' . $errorMessage);
 }
 ?>
 
@@ -90,7 +110,10 @@ if (isset($_GET['ErrorMessage'])) {
         <form id="gradeForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label class="form-group mb-2" for="studentname"><strong>Name:</strong></label>
-                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" placeholder="Enter Name" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" value="<?php echo $invalidinputs['studentname'] ?? ''; ?>" placeholder="Enter Name" autocomplete="off">
+                <?php if (isset($errors["studentname"])) { ?>
+                    <small class="error-message"><?php echo $errors["studentname"]; ?></small>
+                <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="coursename"><strong>Select Course:</strong></label>
@@ -102,6 +125,9 @@ if (isset($_GET['ErrorMessage'])) {
                     <option value="devops" disabled>Devops</option>
                     <option value="cloud" disabled>Cloud</option>
                 </select>
+                <?php if (isset($errors["coursename"])) { ?>
+                    <small class="error-message"><?php echo $errors["coursename"]; ?></small>
+                <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="module"><strong>Select Module:</strong></label>
@@ -119,11 +145,17 @@ if (isset($_GET['ErrorMessage'])) {
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="exerciseScore"><strong>Exercise Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" placeholder="Enter Score" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" value="<?php echo $invalidinputs['exercisescore'] ?? ''; ?>" placeholder="Enter exercise score" autocomplete="off">
+                <?php if (isset($errors["studentname"])) { ?>
+                    <small class="error-message"><?php echo $errors["exercisescore"]; ?></small>
+                <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="projectScore"><strong>Project Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" placeholder="Enter Score" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" value="<?php echo $invalidinputs['projectscore'] ?? ''; ?>" placeholder="Enter project score" autocomplete="off">
+                <?php if (isset($errors["studentname"])) { ?>
+                    <small class="error-message"><?php echo $errors["projectscore"]; ?></small>
+                <?php } ?>
             </div>
             <div class="form-group float-end mb-4 pt-4">
                 <button type="submit" class="btn btn-primary">Submit</button>
