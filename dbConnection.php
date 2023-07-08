@@ -11,22 +11,22 @@ $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 /******* Create Database ******/
-// function dbConnection(string $databaseName): bool
-// {
-//     $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
-//     $conn = $connection->getConnection();
+function dbConnection(string $databaseName): bool
+{
+    $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
+    $conn = $connection->getConnection();
 
-//     if (!is_resource($conn)) {
-//         throw new Exception('Connection failed.');
-//     }
+    if (!is_resource($conn)) {
+        throw new Exception('Connection failed.');
+    }
 
-//     $sql_query = "CREATE DATABASE $databaseName";
-//     if ($conn->query($sql_query) === true) {
-//         return true;
-//     } else {
-//         throw new Exception('Database creation failed: ' . $conn->error);
-//     }
-// }
+    $sql_query = "CREATE DATABASE $databaseName";
+    if ($conn->query($sql_query) === true) {
+        return true;
+    } else {
+        throw new Exception('Database creation failed: ' . $conn->error);
+    }
+}
 
 /******* Create Table ******/
 function tableConnection(string $databaseName): ?mysqli

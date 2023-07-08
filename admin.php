@@ -3,15 +3,58 @@
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $errors = []; // Declare an error array variable
+    $validinputs = []; // Declare an empty  array to store valid form fields
+    $invalidinputs = []; // Declare an empty  array to store invalid form fields
     if (filter_has_var(INPUT_POST, 'submitstudentForm')) {
         // Student Form Processing
+
+        /** Studentname field */
+        $regpattern = '/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/';
+        $studentname = filter_input(INPUT_POST, 'studentname', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($studentname !== false && $studentname !== null) {
+            $validinputs['studentname'] = ucwords($studentname);
+        } else {
+            $errors['studentname'] = "Name cannot contain numbers or non-alpahbetic characters";
+            $invalidinputs['studentname'] = $studentname;
+        }
+
+        /**Coursename field */
+        $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
+        $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($coursename !== null && in_array($coursename, $courseoptions)) {
+            $validinputs['coursename'] = $coursename;
+        } else {
+            $errors['coursename'] = "Invalid Option";
+            $invalidinputs['coursename'] = $coursename;
+        }
+
+        if (!empty($errors)) {
+            // Redirect to admin page with error message
+            $errorMessage = "Invalid Entries";
+            header('Location: admin.php?errorMessage=' . $errorMessage);
+        }
+        // Submits Form Data
+        $regNo = time();
+        $validinputs['regno'] = $regNo;
+        $databaseName = "student";
+        $conn = tableOpConnection($databaseName);
+        $conn = new DbTableOps($conn);
+        $tableName = $validinputs['coursename'];
+        $record = $conn->createRecords("$tableName", $validinputs);
+        if ($record) {
+            // Redirect to admin page with success message
+            $successMessage = "Entry Added Successfully";
+            header('Location: admin.php?successMessage=' . $successMessage);
+        }
     }
 
     if (filter_has_var(INPUT_POST, 'submitmoduleForm')) {
         // Module Form Processing
-        $errors = []; // Declare an error array variable
-        $validinputs = []; // Declare an empty  array to store valid form fields
-        $invalidinputs = []; // Declare an empty  array to store invalid form fields
 
         /**Coursename field */
         $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
@@ -56,10 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: admin.php?errorMessage=' . $errorMessage);
         }
         // Submits Form Data
-        $databaseName = $validinputs['coursename'];
+        $databaseName = "course";
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
-        $tableName = "";
+        $tableName = "modules";
         $record = $conn->createRecords("$tableName", $validinputs);
         if ($record) {
             // Redirect to admin page with success message
@@ -70,9 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (filter_has_var(INPUT_POST, 'submitchapterForm')) {
         // Chapter Form Validation and Processing
-        $errors = []; // Declare an error array variable
-        $validinputs = []; // Declare an empty  array to store valid form fields
-        $invalidinputs = []; // Declare an empty  array to store invalid form fields
 
         /**Coursename field */
         $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
@@ -85,8 +125,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $invalidinputs['coursename'] = $coursename;
         }
 
-        // /** Modulename field */
-        // $moduleoptions = null;
+        /** Modulename field */
+        // $databaseName = "course";
+        // $conn = tableOpConnection($databaseName);
+        // $conn = new DbTableOps($conn);
+        $selectedcourse = "";
+        // $fieldname = "`modulename`";
+        // $moduleNameValues =
+        //     $moduleoptions = $conn->retrieveColumnValues("modules", $fieldName, $selectedcourse);
         // $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         // if ($modulename !== null && in_array($modulename, $moduleoptions)) {
@@ -128,10 +174,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: admin.php?errorMessage=' . $errorMessage);
         }
         // Submits Form Data
-        $databaseName = $validinputs['coursename'];
+        $databaseName = "module";
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
-        $tableName = "";
+        $tableName = "chapters";
         $record = $conn->createRecords("$tableName", $validinputs);
         if ($record) {
             // Redirect to admin page with success message
@@ -189,7 +235,7 @@ if (isset($_GET['errorMessage'])) {
         <tbody>
             <?php
             // retrieves tablenames in database
-            // $databaseName = "student";
+            $databaseName = "student";
             // $conn = tableConnection($databaseName);
             // $conn = new DbTable($conn);
             // $tableNames = $conn->retrieveTableNames($databaseName);
@@ -241,6 +287,9 @@ if (isset($_GET['errorMessage'])) {
                     <div class="form-group">
                         <label class="mb-2" for="studentname"><strong>Name:</strong></label>
                         <input type="text" class="form-control mb-2" id="studentname" name="studentname" autocomplete="off" placeholder="Enter name" />
+                        <?php if (isset($errors["studentname"])) { ?>
+                            <small class="error-message"><?php echo $errors["studentname"]; ?></small>
+                        <?php } ?>
                     </div>
                     <div class="form-group">
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
@@ -252,6 +301,9 @@ if (isset($_GET['errorMessage'])) {
                             <option value="devops">Devops</option>
                             <option value="cloud">Cloud</option>
                         </select>
+                        <?php if (isset($errors["coursename"])) { ?>
+                            <small class="error-message"><?php echo $errors["coursename"]; ?></small>
+                        <?php } ?>
                     </div>
                     <button type="submit" name="submitstudentForm" class="float-end btn btn-primary">
                         Submit
@@ -282,17 +334,23 @@ if (isset($_GET['errorMessage'])) {
                             <option value="devops">Devops</option>
                             <option value="cloud">Cloud</option>
                         </select>
-                        <small class="alert alert-danger"><?php echo $errors['coursename'] ?? ''; ?></small>
+                        <?php if (isset($errors["coursename"])) { ?>
+                            <small class="error-message"><?php echo $errors["coursename"]; ?></small>
+                        <?php } ?>
                     </div>
                     <div class="form-group mb-2">
                         <label class="mb-2" for="moduleid"><strong>Module ID:</strong></label>
                         <input type="text" class="form-control mb-2" id="moduleid" name="moduleid" value="<?php echo $invalidinputs['moduleid'] ?? ''; ?>" autocomplete="off" placeholder="Enter module ID" />
-                        <small class="alert alert-danger"><?php echo $errors['moduleid'] ?? ''; ?></small>
+                        <?php if (isset($errors["moduleid"])) { ?>
+                            <small class="error-message"><?php echo $errors["moduleid"]; ?></small>
+                        <?php } ?>
                     </div>
                     <div class="form-group mb-2">
                         <label class="mb-2" for="modulename"><strong>Module Name:</strong></label>
                         <input type="text" class="form-control mb-2" id="modulename" name="modulename" value="<?php echo $invalidinputs['modulename'] ?? ''; ?>" autocomplete="off" placeholder="Enter module name" />
-                        <small class="alert alert-danger"><?php echo $errors['modulename'] ?? ''; ?></small>
+                        <?php if (isset($errors["modulename"])) { ?>
+                            <small class="error-message"><?php echo $errors["modulename"]; ?></small>
+                        <?php } ?>
                     </div>
                     <button type="submit" name="submitmoduleForm" class="float-end btn btn-primary">Submit</button>
                 </form>
@@ -311,6 +369,20 @@ if (isset($_GET['errorMessage'])) {
             </div>
             <div class="modal-body">
                 <form id="chapterForm" name="chapterForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <div class="form-group mb-2">
+                        <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
+                        <select class="form-control mb-2" id="coursename" name="coursename">
+                            <option value="">--Click to Select--</option>
+                            <option value="frontend">Frontend</option>
+                            <option value="backend>">Backend</option>
+                            <option value="fullstack">Fullstack</option>
+                            <option value="devops">Devops</option>
+                            <option value="cloud">Cloud</option>
+                        </select>
+                        <?php if (isset($errors["coursename"])) { ?>
+                            <small class="error-message"><?php echo $errors["coursename"]; ?></small>
+                        <?php } ?>
+                    </div>
                     <div class=" form-group">
                         <label class="mb-2" for="modulename"><strong>Select Module::</strong></label>
                         <select class="form-control mb-2" id="modulename" name="modulename">
@@ -319,23 +391,33 @@ if (isset($_GET['errorMessage'])) {
                             $databaseName = "course";
                             $conn = tableOpConnection($databaseName);
                             $conn = new DbTableOps($conn);
+                            $selectedcourse = "backend"; // the $selectedcourse is hardcoded but i intend to improve this using ajax
                             $moduleNameColumn = "`modulename`";
-                            $moduleNameValues = $conn->retrieveColumnValues("modules", $moduleNameColumn);
+                            $moduleNameValues = $conn->retrieveColumnValues("modules", $moduleNameColumn, $selectedcourse);
                             foreach ($moduleNameValues as $moduleName) {
                             ?>
-                                <option value="<?php echo $moduleName; ?>"><?php echo $moduleName; ?></option>
+                                <option value="<?php echo $moduleName; ?>"><?php echo ucwords($moduleName); ?></option>
                             <?php
                             }
                             ?>
                         </select>
+                        <?php if (isset($errors["modulename"])) { ?>
+                            <small class="error-message"><?php echo $errors["modulename"]; ?></small>
+                        <?php } ?>
                     </div>
                     <div class="form-group">
                         <label class="mb-2" for="chapterid"><strong>Chapter ID:</strong></label>
-                        <input type="text" class="form-control mb-2" id="chapterid" name="chapterid" autocomplete="off" placeholder="Enter chapter ID" />
+                        <input type="text" class="form-control mb-2" id="chapterid" name="chapterid" value="<?php echo $invalidinputs['chapterid'] ?? ''; ?>" autocomplete="off" placeholder="Enter chapter ID" />
+                        <?php if (isset($errors["chapterid"])) { ?>
+                            <small class="error-message"><?php echo $errors["chapterid"]; ?></small>
+                        <?php } ?>
                     </div>
                     <div class="form-group">
                         <label class="mb-2" for="chaptername"><strong>Chapter Name:</strong></label>
-                        <input type="text" class="form-control mb-2" id="chaptername" name="chaptername" autocomplete="off" placeholder="Enter chapter name" />
+                        <input type="text" class="form-control mb-2" id="chaptername" name="chaptername" value="<?php echo $invalidinputs['chaptername'] ?? ''; ?>" autocomplete="off" placeholder="Enter chapter name" />
+                        <?php if (isset($errors["chaptername"])) { ?>
+                            <small class="error-message"><?php echo $errors["chaptername"]; ?></small>
+                        <?php } ?>
                     </div>
                     <button type="submit" name="submitchapterForm" class="float-end btn btn-primary">
                         Submit

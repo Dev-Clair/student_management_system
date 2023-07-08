@@ -23,7 +23,7 @@
         </nav>
 
         <?php
-        $pageview = (strpos($_SERVER['PHP_SELF'], 'admin.php') !== false) ? 'Home' : 'Admin';
+        $pageview = basename($_SERVER['PHP_SELF']) === 'admin.php' ? 'Home' : 'Admin';
         $pagelink = ($pageview === 'Home') ? "index" : strtolower("Admin");
         ?>
         <a href="./<?php echo $pagelink; ?>.php" class="flex-right btn text-white"><strong><?php echo $pageview; ?></strong></a>

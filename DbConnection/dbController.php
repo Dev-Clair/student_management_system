@@ -289,25 +289,34 @@ class DbTableOps
         return null;
     }
 
-    public function retrieveColumnValues(string $tableName, string $columnName): array
+    public function retrieveColumnValues(string $tableName, string $fieldName, $fieldValue): array
     {
         if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
         }
 
-        $sql_query = "SELECT $columnName FROM $tableName";
-        $result = $this->conn->query($sql_query);
+        $sql_query = "SELECT * FROM $tableName WHERE $fieldName = ?";
+        $stmt = $this->conn->prepare($sql_query);
+
+        if ($stmt === false) {
+            die("Error in preparing statement: " . $this->conn->error);
+        }
+
+        $stmt->bind_param($this->getBindParamTypes([$fieldValue]), $fieldValue);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
             $columnValues = [];
             while ($row = $result->fetch_array(MYSQLI_NUM)) {
                 $columnValues[] = $row[0];
             }
-            $result->close(); // Close Result Object
-
+            $stmt->close(); // Close Statement Object
             return $columnValues;
         }
-        $this->conn->close(); // Close connection
+
+        $stmt->close(); // Close Statement Object
+        $this->conn->close(); // Close Connection
         return [];
     }
 
