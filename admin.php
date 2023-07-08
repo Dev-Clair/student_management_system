@@ -126,20 +126,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** Modulename field */
-        $databaseName = "course";
-        $conn = tableOpConnection($databaseName);
-        $conn = new DbTableOps($conn);
-        $selectedcourse = $coursename;
-        $fieldname = "`modulename`";
-        $moduleoptions = $conn->retrieveColumnValues("modules", $fieldName, $selectedcourse);
-        $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
+        // $databaseName = "course";
+        // $conn = tableOpConnection($databaseName);
+        // $conn = new DbTableOps($conn);
+        // global $coursename;
+        // $selectedcourse = $coursename;
+        // $fieldname = "`modulename`";
+        // $moduleoptions = $conn->retrieveColumnValues("modules", $fieldName, $selectedcourse);
+        // $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if ($modulename !== null && in_array($modulename, $moduleoptions)) {
-            $validinputs['modulename'] = $modulename;
-        } else {
-            $errors['modulename'] = "Please choose a valid module";
-            $invalidinputs['modulename'] = $modulename;
-        }
+        // if ($modulename !== null && in_array($modulename, $moduleoptions)) {
+        //     $validinputs['modulename'] = $modulename;
+        // } else {
+        //     $errors['modulename'] = "Please choose a valid module";
+        //     $invalidinputs['modulename'] = $modulename;
+        // }
 
         /** ChapterID field */
         $regpattern = '/^[A-Z]+[\d]+$/';

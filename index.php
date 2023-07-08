@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     // Redirect to index page with error message
     $errorMessage = "Error! Process failed, Please try again.";
-    header('Location: admin.php?errorMessage=' . $errorMessage);
+    header('Location: index.php?errorMessage=' . $errorMessage);
 }
 ?>
 
@@ -92,14 +92,14 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 ?>
 <!-- Success and Error Alert -->
 <?php
-if (isset($_GET['SuccessMessage'])) {
-    $successMessage = $_GET['SuccessMessage'];
+if (isset($_GET['successMessage'])) {
+    $successMessage = $_GET['successMessage'];
     echo '<div class="alert alert-success">' . $successMessage . '</div>';
 }
 ?>
 <?php
-if (isset($_GET['ErrorMessage'])) {
-    $errorMessage = $_GET['ErrorMessage'];
+if (isset($_GET['errorMessage'])) {
+    $errorMessage = $_GET['errorMessage'];
     echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
 }
 ?>
