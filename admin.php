@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($coursename !== null && in_array($coursename, $courseoptions)) {
             $validinputs['coursename'] = $coursename;
         } else {
-            $errors['coursename'] = "Invalid Option";
+            $errors['coursename'] = "Please select a valid course";
             $invalidinputs['coursename'] = $coursename;
         }
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
         $tableName = $validinputs['coursename'];
-        $record = $conn->createRecords("$tableName", $validinputs);
+        $record = $conn->createRecords($tableName, $validinputs);
         if ($record) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($coursename !== null && in_array($coursename, $courseoptions)) {
             $validinputs['coursename'] = $coursename;
         } else {
-            $errors['coursename'] = "Invalid Option";
+            $errors['coursename'] = "Please select a valid course";
             $invalidinputs['coursename'] = $coursename;
         }
 
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($modulename !== false && $modulename !== null) {
             $validinputs['modulename'] = ucwords($modulename);
         } else {
-            $errors['modulename'] = "Invalid Module Name";
+            $errors['modulename'] = "Please choose a valid module";
             $invalidinputs['modulename'] = $modulename;
         }
 
@@ -121,26 +121,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($coursename !== null && in_array($coursename, $courseoptions)) {
             $validinputs['coursename'] = $coursename;
         } else {
-            $errors['coursename'] = "Invalid Option";
+            $errors['coursename'] = "Please select a valid course";
             $invalidinputs['coursename'] = $coursename;
         }
 
         /** Modulename field */
-        // $databaseName = "course";
-        // $conn = tableOpConnection($databaseName);
-        // $conn = new DbTableOps($conn);
-        $selectedcourse = "";
-        // $fieldname = "`modulename`";
-        // $moduleNameValues =
-        //     $moduleoptions = $conn->retrieveColumnValues("modules", $fieldName, $selectedcourse);
-        // $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
+        $databaseName = "course";
+        $conn = tableOpConnection($databaseName);
+        $conn = new DbTableOps($conn);
+        $selectedcourse = $coursename;
+        $fieldname = "`modulename`";
+        $moduleoptions = $conn->retrieveColumnValues("modules", $fieldName, $selectedcourse);
+        $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        // if ($modulename !== null && in_array($modulename, $moduleoptions)) {
-        //     $validinputs['modulename'] = $modulename;
-        // } else {
-        //     $errors['modulename'] = "Invalid Option";
-        //     $invalidinputs['modulename'] = $modulename;
-        // }
+        if ($modulename !== null && in_array($modulename, $moduleoptions)) {
+            $validinputs['modulename'] = $modulename;
+        } else {
+            $errors['modulename'] = "Please choose a valid module";
+            $invalidinputs['modulename'] = $modulename;
+        }
 
         /** ChapterID field */
         $regpattern = '/^[A-Z]+[\d]+$/';
@@ -164,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($chaptername !== false && $chaptername !== null) {
             $validinputs['chaptername'] = ucwords($chaptername);
         } else {
-            $errors['chaptername'] = "Invalid Chapter Name";
+            $errors['chaptername'] = "Please select a valid chapter name";
             $invalidinputs['chaptername'] = $chaptername;
         }
 
@@ -295,11 +294,11 @@ if (isset($_GET['errorMessage'])) {
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
                         <select class="form-control mb-2" id="coursename" name="coursename">
                             <option value="">--Click to Select--</option>
-                            <option value="frontend">Frontend</option>
+                            <option value="frontend" disabled>Frontend</option>
                             <option value="backend">Backend</option>
-                            <option value="fullstack">Fullstack</option>
-                            <option value="devops">Devops</option>
-                            <option value="cloud">Cloud</option>
+                            <option value="fullstack" disabled>Fullstack</option>
+                            <option value="devops" disabled>Devops</option>
+                            <option value="cloud" disabled>Cloud</option>
                         </select>
                         <?php if (isset($errors["coursename"])) { ?>
                             <small class="error-message"><?php echo $errors["coursename"]; ?></small>
@@ -328,11 +327,11 @@ if (isset($_GET['errorMessage'])) {
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
                         <select class="form-control mb-2" id="coursename" name="coursename">
                             <option value="">--Click to Select--</option>
-                            <option value="frontend">Frontend</option>
-                            <option value="backend>">Backend</option>
-                            <option value="fullstack">Fullstack</option>
-                            <option value="devops">Devops</option>
-                            <option value="cloud">Cloud</option>
+                            <option value="frontend" disabled>Frontend</option>
+                            <option value="backend">Backend</option>
+                            <option value="fullstack" disabled>Fullstack</option>
+                            <option value="devops" disabled>Devops</option>
+                            <option value="cloud" disabled>Cloud</option>
                         </select>
                         <?php if (isset($errors["coursename"])) { ?>
                             <small class="error-message"><?php echo $errors["coursename"]; ?></small>
@@ -373,11 +372,11 @@ if (isset($_GET['errorMessage'])) {
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
                         <select class="form-control mb-2" id="coursename" name="coursename">
                             <option value="">--Click to Select--</option>
-                            <option value="frontend">Frontend</option>
-                            <option value="backend>">Backend</option>
-                            <option value="fullstack">Fullstack</option>
-                            <option value="devops">Devops</option>
-                            <option value="cloud">Cloud</option>
+                            <option value="frontend" disabled>Frontend</option>
+                            <option value="backend">Backend</option>
+                            <option value="fullstack" disabled>Fullstack</option>
+                            <option value="devops" disabled>Devops</option>
+                            <option value="cloud" disabled>Cloud</option>
                         </select>
                         <?php if (isset($errors["coursename"])) { ?>
                             <small class="error-message"><?php echo $errors["coursename"]; ?></small>

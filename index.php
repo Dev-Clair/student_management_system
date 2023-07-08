@@ -1,7 +1,70 @@
 <?php
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
+require_once  __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 $databaseName = "grade";
 $connection = tableOpConnection($databaseName);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $errors = []; // Declare an error array variable
+    $validinputs = []; // Declare an empty  array to store valid form fields
+    $invalidinputs = []; // Declare an empty  array to store invalid form fields
+    if (filter_has_var(INPUT_POST, 'gradeForm')) {
+        // Grade Form Processing
+
+        /** Studentname field */
+        $regpattern = '/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/';
+        $studentname = filter_input(INPUT_POST, 'studentname', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($studentname !== false && $studentname !== null) {
+            $validinputs['studentname'] = ucwords($studentname);
+        } else {
+            $errors['studentname'] = "Name cannot contain numbers or non-alpahbetic characters";
+            $invalidinputs['studentname'] = $studentname;
+        }
+
+        /**Coursename field */
+        $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
+        $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($coursename !== null && in_array($coursename, $courseoptions)) {
+            $validinputs['coursename'] = $coursename;
+        } else {
+            $errors['coursename'] = "Please select a valid course";
+            $invalidinputs['coursename'] = $coursename;
+        }
+
+        /**Modulename field */
+        $regpattern = '/^[a-zA-Z]+*$/';
+        $modulename = filter_input(INPUT_POST, 'modulename', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($modulename !== false && $modulename !== null) {
+            $validinputs['modulename'] = ucwords($modulename);
+        } else {
+            $errors['modulename'] = "Please choose a valid module";
+            $invalidinputs['modulename'] = $modulename;
+        }
+
+        /** Chaptername field */
+        $regpattern = '/^[a-zA-Z]+*$/';
+        $chaptername = filter_input(INPUT_POST, 'chaptername', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
+
+        if ($chaptername !== false && $chaptername !== null) {
+            $validinputs['chaptername'] = ucwords($chaptername);
+        } else {
+            $errors['chaptername'] = "Please select a valid chapter name";
+            $invalidinputs['chaptername'] = $chaptername;
+        }
+
+        /** Exercise Score field */
+
+        /** Project Score field */
+    }
+}
 ?>
 
 <?php
@@ -33,11 +96,11 @@ if (isset($_GET['ErrorMessage'])) {
                 <label class="form-group mb-2" for="coursename"><strong>Select Course:</strong></label>
                 <select class="mb-2 form-control" id="coursename" name="coursename">
                     <option value="">--Click to Select--</option>
-                    <option value="frontend">Frontend</option>
+                    <option value="frontend" disabled>Frontend</option>
                     <option value="backend">Backend</option>
-                    <option value="fullstack">Fullstack</option>
-                    <option value="devops">Devops</option>
-                    <option value="cloud">Cloud</option>
+                    <option value="fullstack" disabled>Fullstack</option>
+                    <option value="devops" disabled>Devops</option>
+                    <option value="cloud" disabled>Cloud</option>
                 </select>
             </div>
             <div class="form-group mb-2">
