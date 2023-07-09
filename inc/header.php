@@ -21,11 +21,15 @@
             <a href="./donations.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>ACADEMY</strong></a>
         </nav>
 
-        <?php
-        $pageview = basename($_SERVER['PHP_SELF']) === 'admin.php' ? 'Main' : 'Admin';
-        $pagelink = ($pageview === 'Main') ? "main" : strtolower("Admin");
-        ?>
-        <a href="./<?php echo $pagelink; ?>.php" class="flex-right btn text-white"><strong><?php echo $pageview; ?></strong></a>
+        <nav class="flex-right btn-grp">
+            <?php
+            $pageview = basename($_SERVER['PHP_SELF']) === 'admin.php' ? 'Main' : 'Admin';
+            $pagelink = ($pageview === 'Main') ? "main" : strtolower("Admin");
+            ?>
+            <a class="btn text-white mr-2" href="./<?php echo $pagelink; ?>.php"><strong><?php echo $pageview; ?></strong></a>
+            <a class="btn text-white mr-2" href="./logout.php"><strong>Log out</strong></a>
+        </nav>
+
     </header>
 
     <main class="my-2 pt-3">

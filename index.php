@@ -2,8 +2,8 @@
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $validinputs = []; // Declare an empty  array to store valid form fields
-  $invalidinputs = []; // Declare an empty  array to store invalid form fields
+  $userinputs = []; // Declare an empty  array to store form field values
+  $errors = []; // Declare an empty  array to store errors
   if (filter_has_var(INPUT_POST, 'loginForm')) {
     // Login Form Processing
 
@@ -14,26 +14,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ));
 
     if ($loginID !== false && $loginID !== null) {
-      $validinputs['loginID'] = $loginID;
-    } else {
-      $invalidinputs['loginID'] = $loginID;
+      $userinputs['loginID'] = $loginID;
     }
 
     /** Password field */
-    $validinputs['password'] = $_POST['password'];
-    $invalidinputs['password'] = $_POST['password'];
+    $userinputs['password'] = $_POST['password'];
 
     // Retrieve User Details from Database 
     $databaseName = "login";
     $conn = tableOpConnection($databaseName);
     $dbTable = new DbTableOps($conn);
     $record = $dbTable->retrieveSingleRecord("admin", "adminID", $loginID);
-    var_dump($record);
+    $retrievedAdminID = $record['adminID'];
+    $retrievedPassword = $record['password_hash'];
     // Verify Form Data
-    if ($record['adminID'] !== $validinputs['loginID'] && !password_verify($password, $record['password_hash'])) {
+    if ($retrievedAdminID !== $userinputs['loginID'] && !password_verify($userinputs['password'], $retrievedPassword)) {
       // Redirect to index page with error message
       $errorMessage = "Invalid Details";
-      header('Location: index.php?loginErrorMessage=' . $errorMessage);
+      header('Location: index.php?loginErrorMessage=' . urlencode($errorMessage));
       exit();
     }
     // Redirect to main page
@@ -42,10 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   // Redirect to index page with error message
   $errorMessage = "Error! Process failed, Please try again.";
-  header('Location: index.php?errorMessage=' . $errorMessage);
+  header('Location: index.php?loginErrorMessage=' . urlencode($errorMessage));
   exit();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -71,41 +68,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <a href="./donations.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>ACADEMY</strong></a>
     </nav>
   </header>
-  <!-- General Error Alert -->
-  <?php
-  if (isset($_GET['errorMessage'])) {
-    $errorMessage = $_GET['errorMessage'];
-    echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
-  }
-  ?>
-  <!-- Login Error Alert -->
-  <?php
-  if (isset($_GET['loginErrorMessage'])) {
-    $errorMessage = $_GET['loginErrorMessage'];
-    echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
-  }
-  ?>
-  <!-- Logout Success Alert -->
-  <?php
-  if (isset($_GET['logoutMessage'])) {
-    $logoutMessage = $_GET['logoutMessage'];
-    echo '<div class="alert alert-success">' . $logoutMessage . '</div>';
-  }
-  ?>
+
   <!--Login  Form -->
   <section>
     <div class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
       <h1 class="mb-4">Log in</h1>
+      <!-- General Error Alert -->
+      <?php
+      if (isset($_GET['errorMessage'])) {
+        $errorMessage = $_GET['errorMessage'];
+        echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+      }
+      ?>
+      <!-- Login Error Alert -->
+      <?php
+      if (isset($_GET['loginErrorMessage'])) {
+        $errorMessage = $_GET['loginErrorMessage'];
+        echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+      }
+      ?>
+      <!-- Logout Success Alert -->
+      <?php
+      if (isset($_GET['logoutMessage'])) {
+        $logoutMessage = $_GET['logoutMessage'];
+        echo '<div class="alert alert-success">' . $logoutMessage . '</div>';
+      }
+      ?>
       <form id="loginForm" name="loginForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <div class="form-group mb-3">
           <label for="login" class="form-label">Login-ID:</label>
-          <input type="text" name="loginID" id="login" class="form-control" placeholder="Enter adminID" value="" />
+          <input type="text" name="loginID" id="login" class="form-control" placeholder="Enter adminID" value="<?php echo htmlspecialchars($userinputs['loginID'] ?? ''); ?>" />
         </div>
         <div class="formgroup mb-3">
           <label for="password" class="form-label">Password:</label>
           <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" value="" />
         </div>
-        <button type="submit" class="btn btn-primary">Log in</button>
+        <button type="submit" name="loginForm" class="btn btn-primary">Log in</button>
       </form>
     </div>
   </section>

@@ -1,7 +1,5 @@
 <?php
 require_once  __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
-$databaseName = "grade";
-$connection = tableOpConnection($databaseName);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = []; // Declare an error array variable
@@ -121,27 +119,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 ?>
-<!-- Success and Error Alert -->
-<?php
-if (isset($_GET['successMessage'])) {
-    $successMessage = $_GET['successMessage'];
-    echo '<div class="alert alert-success">' . $successMessage . '</div>';
-}
-?>
-<?php
-if (isset($_GET['errorMessage'])) {
-    $errorMessage = $_GET['errorMessage'];
-    echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
-}
-?>
 
 <div class="row">
+    <!-- Success and Error Alert -->
+    <?php
+    if (isset($_GET['successMessage'])) {
+        $successMessage = $_GET['successMessage'];
+        echo '<div class="alert alert-success">' . $successMessage . '</div>';
+    }
+    ?>
+    <?php
+    if (isset($_GET['errorMessage'])) {
+        $errorMessage = $_GET['errorMessage'];
+        echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+    }
+    ?>
     <div class="fixed-left left-container pt-2">
         <h4>Student Grade</h4>
         <form id="gradeForm" name="gradeForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label class="form-group mb-2" for="studentname"><strong>Name:</strong></label>
-                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" value="<?php echo $invalidinputs['studentname'] ?? ''; ?>" placeholder="Enter Name" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" value="<?php echo htmlspecialchars($invalidinputs['studentname'] ?? ''); ?>" placeholder="Enter Name" autocomplete="off">
                 <?php if (isset($errors["studentname"])) { ?>
                     <small class="error-message"><?php echo $errors["studentname"]; ?></small>
                 <?php } ?>
@@ -182,20 +180,20 @@ if (isset($_GET['errorMessage'])) {
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="exerciseScore"><strong>Exercise Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" value="<?php echo $invalidinputs['exercisescore'] ?? ''; ?>" placeholder="Enter exercise score" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" value="<?php echo htmlspecialchars($invalidinputs['exercisescore'] ?? ''); ?>" placeholder="Enter exercise score" autocomplete="off">
                 <?php if (isset($errors["studentname"])) { ?>
                     <small class="error-message"><?php echo $errors["exercisescore"]; ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="projectScore"><strong>Project Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" value="<?php echo $invalidinputs['projectscore'] ?? ''; ?>" placeholder="Enter project score" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" value="<?php echo htmlspecialchars($invalidinputs['projectscore'] ?? ''); ?>" placeholder="Enter project score" autocomplete="off">
                 <?php if (isset($errors["studentname"])) { ?>
                     <small class="error-message"><?php echo $errors["projectscore"]; ?></small>
                 <?php } ?>
             </div>
             <div class="form-group float-end mb-4 pt-4">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" name="gradeForm" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
