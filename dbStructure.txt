@@ -23,7 +23,7 @@ Tables: Modules
 Fields: CourseName, ModuleID-Unique, ModuleName-Unique
 
 Form ID: Chapter Form
-Form Fields: Module Name(select), Chapter ID(text), Chapter Name(text)
+Form Fields: Course Name(select), Module Name(select), Chapter ID(text), Chapter Name(text)
 Database: Module
 Tables: Chapters
 Fields: ModuleName, ChapterID-Unique, ChapterName-Unique
