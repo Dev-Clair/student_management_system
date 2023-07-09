@@ -266,6 +266,9 @@ class DbTableOps
         return [];
     }
 
+    /**
+     * retrieve a single value from a specific field
+     */
     public function retrieveSingleValue(string $tableName, $fieldName, $fieldValue): int|string|bool|array|null
     {
         if (!$this->conn instanceof mysqli) {
@@ -289,7 +292,10 @@ class DbTableOps
         return null;
     }
 
-    public function retrieveColumnValues(string $tableName, string $fieldName, $fieldValue): array
+    /**
+     * retrieve multiple values from a specific field
+     */
+    public function retrieveMultipleValues(string $tableName, string $fieldName, $fieldValue): array
     {
         if (!$this->conn instanceof mysqli) {
             die("No database connection available.");
@@ -320,6 +326,9 @@ class DbTableOps
         return [];
     }
 
+    /**
+     * retrieve a single record as an associative array from a specific field
+     */
     public function retrieveSingleRecord(string $tableName, string $fieldName, $fieldValue): array
     {
         if (!$this->conn instanceof mysqli) {

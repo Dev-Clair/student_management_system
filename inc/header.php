@@ -22,8 +22,8 @@
         </nav>
 
         <?php
-        $pageview = basename($_SERVER['PHP_SELF']) === 'admin.php' ? 'Home' : 'Admin';
-        $pagelink = ($pageview === 'Home') ? "index" : strtolower("Admin");
+        $pageview = basename($_SERVER['PHP_SELF']) === 'admin.php' ? 'Main' : 'Admin';
+        $pagelink = ($pageview === 'Main') ? "main" : strtolower("Admin");
         ?>
         <a href="./<?php echo $pagelink; ?>.php" class="flex-right btn text-white"><strong><?php echo $pageview; ?></strong></a>
     </header>

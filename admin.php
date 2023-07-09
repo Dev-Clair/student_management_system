@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
             header('Location: admin.php?errorMessage=' . $errorMessage);
+            exit();
         }
         // Submits Form Data
         $regNo = time();
@@ -50,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
             header('Location: admin.php?successMessage=' . $successMessage);
+            exit();
         }
     }
 
@@ -97,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
             header('Location: admin.php?errorMessage=' . $errorMessage);
+            exit();
         }
         // Submits Form Data
         $databaseName = "course";
@@ -108,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
             header('Location: admin.php?successMessage=' . $successMessage);
+            exit();
         }
     }
 
@@ -126,21 +130,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** Modulename field */
-        // $databaseName = "course";
-        // $conn = tableOpConnection($databaseName);
-        // $conn = new DbTableOps($conn);
-        // global $coursename;
-        // $selectedcourse = $coursename;
-        // $fieldname = "`modulename`";
-        // $moduleoptions = $conn->retrieveColumnValues("modules", $fieldName, $selectedcourse);
-        // $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
+        $databaseName = "course";
+        $conn = tableOpConnection($databaseName);
+        $conn = new DbTableOps($conn);
+        global $coursename;
+        $selectedcourse = $coursename;
+        $fieldname = "`modulename`";
+        $moduleoptions = $conn->retrieveMultipleValues("modules", $fieldName, $selectedcourse);
+        $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        // if ($modulename !== null && in_array($modulename, $moduleoptions)) {
-        //     $validinputs['modulename'] = $modulename;
-        // } else {
-        //     $errors['modulename'] = "Please choose a valid module";
-        //     $invalidinputs['modulename'] = $modulename;
-        // }
+        if ($modulename !== null && in_array($modulename, $moduleoptions)) {
+            $validinputs['modulename'] = $modulename;
+        } else {
+            $errors['modulename'] = "Please choose a valid module";
+            $invalidinputs['modulename'] = $modulename;
+        }
 
         /** ChapterID field */
         $regpattern = '/^[A-Z]+[\d]+$/';
@@ -172,6 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
             header('Location: admin.php?errorMessage=' . $errorMessage);
+            exit();
         }
         // Submits Form Data
         $databaseName = "module";
@@ -183,11 +188,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect to admin page with success message
             $successMessage = "Entries Added Successfully";
             header('Location: admin.php?successMessage=' . $successMessage);
+            exit();
         }
     }
     // Redirect to admin page with error message
     $errorMessage = "Error! Process failed, Please try again.";
     header('Location: admin.php?errorMessage=' . $errorMessage);
+    exit();
 }
 ?>
 
@@ -198,13 +205,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 <?php
 if (isset($_GET['successMessage'])) {
     $successMessage = $_GET['successMessage'];
-    echo '<div class="alert alert-success mt-2">' . $successMessage . '</div>';
+    echo '<div class="alert alert-success">' . $successMessage . '</div>';
 }
 ?>
 <?php
 if (isset($_GET['errorMessage'])) {
     $errorMessage = $_GET['errorMessage'];
-    echo '<div class="alert alert-danger mt-2">' . $errorMessage . '</div>';
+    echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
 }
 ?>
 
@@ -395,7 +402,7 @@ if (isset($_GET['errorMessage'])) {
                             $conn = new DbTableOps($conn);
                             $selectedcourse = "backend"; // the $selectedcourse is hardcoded but i intend to improve this using ajax
                             $moduleNameColumn = "`modulename`";
-                            $moduleNameValues = $conn->retrieveColumnValues("modules", $moduleNameColumn, $selectedcourse);
+                            $moduleNameValues = $conn->retrieveMultipleValues("modules", $moduleNameColumn, $selectedcourse);
                             foreach ($moduleNameValues as $moduleName) {
                             ?>
                                 <option value="<?php echo $moduleName; ?>"><?php echo ucwords($moduleName); ?></option>
