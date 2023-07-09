@@ -1,4 +1,4 @@
 .env
 .htaccess
 sessions/
-dbStructure.txt
+./dbStructure.txt
