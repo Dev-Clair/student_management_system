@@ -198,13 +198,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 <?php
 if (isset($_GET['successMessage'])) {
     $successMessage = $_GET['successMessage'];
-    echo '<div class="alert alert-success">' . $successMessage . '</div>';
+    echo '<div class="alert alert-success mt-2">' . $successMessage . '</div>';
 }
 ?>
 <?php
 if (isset($_GET['errorMessage'])) {
     $errorMessage = $_GET['errorMessage'];
-    echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+    echo '<div class="alert alert-danger mt-2">' . $errorMessage . '</div>';
 }
 ?>
 

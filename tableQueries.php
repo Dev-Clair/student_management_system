@@ -19,8 +19,56 @@ $databaseName = "module";
 // print_r(dbConnection($databaseName));
 echo "\n";
 
+$databaseName = "login";
+// print_r(dbConnection($databaseName));
+echo "\n";
 
 /** *******************************************Create Tables***************************************** */
+/** ******* Login Database Table*******/
+
+$tableName = "admin";
+$fieldNames = "`adminID` VARCHAR(50) PRIMARY KEY NOT NULL,
+               `adminname` VARCHAR(100) NOT NULL,
+               `email` VARCHAR(100) UNIQUE NOT NULL,
+               `password_hash` VARCHAR(255) NOT NULL,
+               `datecreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
+
+$databaseName = "login";
+// $conn = tableConnection($databaseName);
+// $dbTable = new DbTable($conn);
+// $result = $dbTable->createTable("`$tableName`", $fieldNames);
+// echo "Creating table $tableName: ";
+// if ($result) {
+//     echo "Success\n";
+// } else {
+//     echo "Failure\n";
+// }
+
+/** Insert User/Admin Record into` admin` table */
+$adminID = "Usr" . strval(readline("Enter your Year of Birth: "));
+$adminname = ucwords(strval(readline("Enter Name: ")));
+$email = strtolower(strval(readline("Enter email: ")));
+$password = readline("Enter Password: ");
+$password_confirmation = readline("Re-Enter Password: ");
+
+$password = ($password === $password_confirmation) ? $password : die("Password doesn't match");
+$passwordhash = password_hash($password, PASSWORD_BCRYPT);
+
+$newAdminData = array(
+    "adminID" => $adminID,
+    "adminname" => $adminname,
+    "email" => $email,
+    "password_hash" => $passwordhash
+);
+// $conn = tableOpConnection($databaseName);
+// $dbTable = new DbTableOps($conn);
+// $status = $dbTable->createRecords("admin", $newAdminData);
+// if ($status) {
+//     echo "User Created Successfully\n";
+// } else {
+//     echo "Process Failed! Cannot Create User\n";
+// }
+
 /** ******* Grade Database Tables*******/
 
 $tableNames = array("frontend", "backend", "fullstack", "devops", "cloud");

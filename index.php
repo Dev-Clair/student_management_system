@@ -61,8 +61,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** Exercise Score field */
+        $scoreoptions = array("min-value" => 0, "max-value" => 10);
+        $exercisescore = filter_input(INPUT_POST, 'exercisescore', FILTER_VALIDATE_INT, array('options' => $scoreoptions));
+
+        if ($exercisescore !== false && $exercisescore !== null) {
+            // Variable is valid
+            $validinputs['exercisescore'] = $exercisescore;
+        } elseif ($exercisescore === null) {
+            // Variable not set
+            $errors['exercisescore'] = "Please enter a score";
+        } else {
+            // Variable is invalid
+            $errors['exercisescore'] = "Please enter a valid score (0-10)";
+            $invalidinputs['exercisescore'] = $exercisescore;
+        }
 
         /** Project Score field */
+        $scoreoptions = array("min-value" => 0, "max-value" => 100);
+        $projectscore = filter_input(INPUT_POST, 'projectscore', FILTER_VALIDATE_INT, array('options' => $scoreoptions));
+
+        if ($projectscore !== false && $projectscore !== null) {
+            // Variable is valid
+            $validinputs['projectscore'] = $projectscore;
+        } elseif ($exercisescore === null) {
+            // Variable not set
+            $errors['projectscore'] = "Please enter a score";
+        } else {
+            // Variable is invalid
+            $errors['projectscore'] = "Please enter a valid score (0-100)";
+            $invalidinputs['projectscore'] = $projectscore;
+        }
 
         if (!empty($errors)) {
             // Redirect to index page with error message
@@ -94,13 +122,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 <?php
 if (isset($_GET['successMessage'])) {
     $successMessage = $_GET['successMessage'];
-    echo '<div class="alert alert-success">' . $successMessage . '</div>';
+    echo '<div class="alert alert-success mt-2">' . $successMessage . '</div>';
 }
 ?>
 <?php
 if (isset($_GET['errorMessage'])) {
     $errorMessage = $_GET['errorMessage'];
-    echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+    echo '<div class="alert alert-danger mt-2">' . $errorMessage . '</div>';
 }
 ?>
 
@@ -135,6 +163,9 @@ if (isset($_GET['errorMessage'])) {
                     <option value="">--Click to Select--</option>
                     <option value=""> </option>
                 </select>
+                <?php if (isset($errors["modulename"])) { ?>
+                    <small class="error-message"><?php echo $errors["modulename"]; ?></small>
+                <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="chapter"><strong>Select Chapter:</strong></label>
@@ -142,6 +173,9 @@ if (isset($_GET['errorMessage'])) {
                     <option value="">--Click to Select--</option>
                     <option value=""> </option>
                 </select>
+                <?php if (isset($errors["chaptername"])) { ?>
+                    <small class="error-message"><?php echo $errors["chaptername"]; ?></small>
+                <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="exerciseScore"><strong>Exercise Score:</strong></label>
@@ -186,11 +220,11 @@ if (isset($_GET['errorMessage'])) {
                             <div class="studentCourse"><strong>Course:</strong> <?php echo ""; ?></div>
 
                             <div class="courseModules"><strong>Course Modules:</strong> <?php echo ""; ?>/6</div>
-                            <div class="moduleExerciseScores"><strong>Exercise Scores:</strong> <?php echo ""; ?></div>
-                            <div class="moduleProjectScores"><strong>Project Scores:</strong> <?php echo ""; ?></div>
+                            <div class="moduleExerciseScores"><strong>Exercise Score:</strong> <?php echo ""; ?>/10</div>
+                            <div class="moduleProjectScores"><strong>Project Score:</strong> <?php echo ""; ?>/100</div>
 
-                            <div class="courseGrade"><strong>Course Grade:</strong> <?php echo "" ?>/10</div>
-                            <div class="overallScore"><strong>Overall Score (Module):</strong> <?php echo "" ?></div>
+                            <div class="totalGrade"><strong>Total Grade:</strong> <?php echo "" ?></div>
+                            <div class="totalScore"><strong>Total Score:</strong> <?php echo "" ?></div>
                         </div>
                         <div class="studentPerformance"><strong>Overall Performance:</strong> <?php echo ""; ?></div>
                     </div>
