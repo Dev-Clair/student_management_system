@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($retrievedAdminID !== $userinputs['loginID'] && !password_verify($userinputs['password'], $retrievedPassword)) {
       // Redirect to index page with error message
       $errorMessage = "Invalid Details";
-      header('Location: index.php?loginErrorMessage=' . urlencode($errorMessage));
+      $_SESSION['errorMessage'] = $errorMessage;
+      header('Location: index.php');
       exit();
     }
     // Start and save userID and loginStatus to session global variable
@@ -46,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
   // Redirect to index page with error message
   $errorMessage = "Error! Process failed, Please try again.";
-  header('Location: index.php?loginErrorMessage=' . urlencode($errorMessage));
+  $_SESSION['errorMessage'] = $errorMessage;
+  header('Location: index.php');
   exit();
 }
 ?>
@@ -79,35 +81,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <section>
     <div class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
       <h1 class="mb-4">Log in</h1>
-      <!-- General Error Alert -->
       <?php
-      if (isset($_GET['errorMessage'])) {
-        $errorMessage = $_GET['errorMessage'];
+      if (isset($_SESSION['errorMessage'])) {
+        $errorMessage = $_SESSION['errorMessage'];
         echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+        unset($_SESSION['errorMessage']);
       }
-      ?>
-      <!-- Login Error Alert -->
-      <?php
-      if (isset($_GET['loginErrorMessage'])) {
-        $errorMessage = $_GET['loginErrorMessage'];
-        echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
-      }
-      ?>
-      <!-- Logout Success Alert -->
-      <?php
-      if (isset($_GET['logoutMessage'])) {
-        $logoutMessage = $_GET['logoutMessage'];
-        echo '<div class="alert alert-success">' . $logoutMessage . '</div>';
+
+      if (isset($_SESSION['successMessage'])) {
+        $successMessage = $_SESSION['successMessage'];
+        echo '<div class="alert alert-success">' . $successMessage . '</div>';
+        unset($_SESSION['successMessage']);
       }
       ?>
       <form id="loginForm" name="loginForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <div class="form-group mb-3">
           <label for="login" class="form-label">Login-ID:</label>
-          <input type="text" name="loginID" id="login" class="form-control" placeholder="Enter adminID" value="<?php echo htmlspecialchars($userinputs['loginID'] ?? ''); ?>" />
+          <input type="text" name="loginID" id="login" class="form-control" placeholder="Enter adminID" value="<?php echo htmlspecialchars($userinputs['loginID'] ?? ''); ?>" autocomplete="off" />
         </div>
         <div class="formgroup mb-3">
           <label for="password" class="form-label">Password:</label>
-          <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" value="" />
+          <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" value="" autocomplete="off" />
         </div>
         <button type="submit" name="loginForm" class="btn btn-primary">Log in</button>
       </form>

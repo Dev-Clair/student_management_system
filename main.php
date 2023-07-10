@@ -3,10 +3,11 @@ session_start(); // Starts session for current script
 // Retrieve Session Variables and verify loginStatus
 $userID = $_SESSION['userID'];
 $loginStatus = $_SESSION['loginStatus'];
-if ($userID === null && $loginStatus !== false) {
+if ($userID === null && $loginStatus === null) {
     // Redirect to login page withinvalid login status
     $errorMessage = "Invalid Login Status! Please login again.";
-    header('Location: index.php?errorMessage=' . urlencode($errorMessage));
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: index.php');
     exit();
 }
 session_regenerate_id();
@@ -105,7 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($errors)) {
             // Redirect to main page with error message
             $errorMessage = "Invalid Entries";
-            header('Location: main.php?errorMessage=' . urlencode($errorMessage));
+            $_SESSION['errorMessage'] = $errorMessage;
+            header('Location: main.php');
             exit();
         }
         // Submits Form Data
@@ -117,13 +119,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($record) {
             // Redirect to main page with success message
             $successMessage = "Entries Added Successfully";
-            header('Location: main.php?successMessage=' . urlencode($successMessage));
+            $_SESSION['successMessage'] = $successMessage;
+            header('Location: main.php');
             exit();
         }
     }
     // Redirect to main page with error message
     $errorMessage = "Error! Process failed, Please try again.";
-    header('Location: main.php?errorMessage=' . urlencode($errorMessage));
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: main.php');
     exit();
 }
 ?>
@@ -135,15 +139,16 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 <div class="row">
     <!-- Success and Error Alert -->
     <?php
-    if (isset($_GET['successMessage'])) {
-        $successMessage = $_GET['successMessage'];
-        echo '<div class="alert alert-success">' . $successMessage . '</div>';
-    }
-    ?>
-    <?php
-    if (isset($_GET['errorMessage'])) {
-        $errorMessage = $_GET['errorMessage'];
+    if (isset($_SESSION['errorMessage'])) {
+        $errorMessage = $_SESSION['errorMessage'];
         echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+        unset($_SESSION['errorMessage']);
+    }
+
+    if (isset($_SESSION['successMessage'])) {
+        $successMessage = $_SESSION['successMessage'];
+        echo '<div class="alert alert-success">' . $successMessage . '</div>';
+        unset($_SESSION['successMessage']);
     }
     ?>
     <div class="fixed-left left-container pt-2">

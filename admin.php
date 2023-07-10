@@ -3,17 +3,17 @@ session_start(); // Starts session for current script
 // Retrieve Session Variables and verify loginStatus
 $userID = $_SESSION['userID'];
 $loginStatus = $_SESSION['loginStatus'];
-if ($userID === null && $loginStatus !== false) {
+if ($userID === null && $loginStatus === null) {
     // Redirect to login page withinvalid login status
     $errorMessage = "Invalid Login Status! Please login again.";
-    header('Location: index.php?errorMessage=' . urlencode($errorMessage));
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: index.php');
     exit();
 }
 session_regenerate_id();
 
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = []; // Declare an error array variable
@@ -49,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($errors)) {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
-            header('Location: admin.php?errorMessage=' . $errorMessage);
+            $_SESSION['errorMessage'] = $errorMessage;
+            header('Location: admin.php');
             exit();
         }
         // Submits Form Data
@@ -63,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($record) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
-            header('Location: admin.php?successMessage=' . $successMessage);
+            $_SESSION['successMessage'] = $successMessage;
+            header('Location: admin.php');
             exit();
         }
     }
@@ -111,7 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($errors)) {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
-            header('Location: admin.php?errorMessage=' . $errorMessage);
+            $_SESSION['errorMessage'] = $errorMessage;
+            header('Location: admin.php');
             exit();
         }
         // Submits Form Data
@@ -123,7 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($record) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
-            header('Location: admin.php?successMessage=' . $successMessage);
+            $_SESSION['successMessage'] = $successMessage;
+            header('Location: admin.php');
             exit();
         }
     }
@@ -188,7 +192,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($errors)) {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
-            header('Location: admin.php?errorMessage=' . $errorMessage);
+            $_SESSION['errorMessage'] = $errorMessage;
+            header('Location: admin.php');
             exit();
         }
         // Submits Form Data
@@ -200,13 +205,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($record) {
             // Redirect to admin page with success message
             $successMessage = "Entries Added Successfully";
-            header('Location: admin.php?successMessage=' . $successMessage);
+            $_SESSION['successMessage'] = $successMessage;
+            header('Location: admin.php');
             exit();
         }
     }
     // Redirect to admin page with error message
     $errorMessage = "Error! Process failed, Please try again.";
-    header('Location: admin.php?errorMessage=' . $errorMessage);
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: admin.php');
     exit();
 }
 ?>
@@ -230,17 +237,17 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
     </button>
 </div>
 <div class="container table-wrapper">
-    <!-- Success and Error Alert -->
     <?php
-    if (isset($_GET['successMessage'])) {
-        $successMessage = $_GET['successMessage'];
-        echo '<div class="alert alert-success">' . $successMessage . '</div>';
-    }
-    ?>
-    <?php
-    if (isset($_GET['errorMessage'])) {
-        $errorMessage = $_GET['errorMessage'];
+    if (isset($_SESSION['errorMessage'])) {
+        $errorMessage = $_SESSION['errorMessage'];
         echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+        unset($_SESSION['errorMessage']);
+    }
+
+    if (isset($_SESSION['successMessage'])) {
+        $successMessage = $_SESSION['successMessage'];
+        echo '<div class="alert alert-success">' . $successMessage . '</div>';
+        unset($_SESSION['successMessage']);
     }
     ?>
 
