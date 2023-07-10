@@ -1,12 +1,14 @@
-# Student Records Management System
+# Student Grade Management System
 
-The Student Records Management System is a simple web application built using PHP and MYSQL. It allows you to manage student records, including adding new students, updating their information, and deleting records.
+The Student Grade Management System is a simple web application built using PHP, Boostrap and MYSQL. It allows you to manage student grades, including adding new students, updating their information, and deleting records.
 
 ## Features
 
-- Add new students with their name, class, registration number -assigned internally using the php in-built time() function-, and grade.
+- Add new students with their name, class, registration number -assigned internally using the php in-built time() function.
 - View a list of all students with their details.
-- Delete student's from the records.
+- View the coursename and modules offered by each student.
+- Add student grade and review performance.
+- Delete student's record.
 - Update student's information.
 
 ## Installation
@@ -25,8 +27,4 @@ The Student Records Management System is a simple web application built using PH
 
 - PHP: Server-side scripting language used for handling data and rendering views.
 - MYSQL: File-based storage used to store the student records.
-- PICO CSS: Front-end framework for responsive and modern user interface design.
-
-## Contributing
-
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+- Boostrap: Front-end framework for responsive and modern user interface design.

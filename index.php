@@ -1,9 +1,10 @@
 <?php
+session_start();
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $userinputs = []; // Declare an empty  array to store form field values
-  $errors = []; // Declare an empty  array to store errors
   $loginStatus = false; // Declare and initialize loginSttus to false
   if (filter_has_var(INPUT_POST, 'loginForm')) {
     // Login Form Processing
@@ -29,20 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $retrievedAdminID = $record['adminID'];
     $retrievedPassword = $record['password_hash'];
     // Verify Form Data
-    if ($retrievedAdminID !== $userinputs['loginID'] && !password_verify($userinputs['password'], $retrievedPassword)) {
-      // Redirect to index page with error message
-      $errorMessage = "Invalid Details";
-      $_SESSION['errorMessage'] = $errorMessage;
-      header('Location: index.php');
+    if ($retrievedAdminID === $userinputs['loginID'] && password_verify($userinputs['password'], $retrievedPassword)) {
+      // Start and save userID and loginStatus to session global variable
+      $loginStatus = true;
+      $_SESSION['userID'] = $retrievedAdminID;
+      $_SESSION['loginStatus'] = $loginStatus;
+      // Redirect to main page
+      header('Location: main.php');
       exit();
     }
-    // Start and save userID and loginStatus to session global variable
-    session_start();
-    $loginStatus = true;
-    $_SESSION['userID'] = $retrievedAdminID;
-    $_SESSION['loginStatus'] = $loginStatus;
-    // Redirect to main page
-    header('Location: main.php');
+    // Redirect to index page with error message
+    $errorMessage = "Invalid Details";
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: index.php');
     exit();
   }
   // Redirect to index page with error message

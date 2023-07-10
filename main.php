@@ -179,7 +179,19 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                 <label class="form-group mb-2" for="module"><strong>Select Module:</strong></label>
                 <select class="mb-2 form-control" id="module" name="module">
                     <option value="">--Click to Select--</option>
-                    <option value=""> </option>
+                    <?php
+                    $databaseName = "course";
+                    $conn = tableOpConnection($databaseName);
+                    $conn = new DbTableOps($conn);
+                    $selectedcourse = "backend"; // the $selectedcourse is hardcoded but i intend to improve this using ajax
+                    $moduleNameColumn = "`modulename`";
+                    $moduleNameValues = $conn->retrieveMultipleValues("modules", $moduleNameColumn, $selectedcourse);
+                    foreach ($moduleNameValues as $moduleName) {
+                    ?>
+                        <option value="<?php echo $moduleName; ?>"><?php echo ucwords($moduleName); ?></option>
+                    <?php
+                    }
+                    ?>
                 </select>
                 <?php if (isset($errors["modulename"])) { ?>
                     <small class="error-message"><?php echo $errors["modulename"]; ?></small>
@@ -189,7 +201,19 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                 <label class="form-group mb-2" for="chapter"><strong>Select Chapter:</strong></label>
                 <select class="mb-2 form-control" id="chapter" name="chapter">
                     <option value="">--Click to Select--</option>
-                    <option value=""> </option>
+                    <?php
+                    $databaseName = "module";
+                    $conn = tableOpConnection($databaseName);
+                    $conn = new DbTableOps($conn);
+                    $selectedcourse = "backend"; // the $selectedcourse is hardcoded but i intend to improve this functionality using ajax
+                    $chapterNameColumn = "`chaptername`";
+                    $chapterNameValues = $conn->retrieveMultipleValues("chapters", $chapterNameColumn, $selectedcourse);
+                    foreach ($chapterNameValues as $chapterName) {
+                    ?>
+                        <option value="<?php echo $chapterName; ?>"><?php echo ucwords($chapterName); ?></option>
+                    <?php
+                    }
+                    ?>
                 </select>
                 <?php if (isset($errors["chaptername"])) { ?>
                     <small class="error-message"><?php echo $errors["chaptername"]; ?></small>

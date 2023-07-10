@@ -55,13 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         // Submits Form Data
         $regNo = time();
-        $validinputs['regno'] = $regNo;
+        $validinputs['regno.'] = $regNo; // Assign registration number
         $databaseName = "student";
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
         $tableName = $validinputs['coursename'];
-        $record = $conn->createRecords($tableName, $validinputs);
-        if ($record) {
+        $status = $conn->createRecords($tableName, $validinputs);
+        if ($status) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
             $_SESSION['successMessage'] = $successMessage;
@@ -285,8 +285,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                         <td><?php echo $row["regno."]; ?></td>
                         <td><?php echo $row["coursename"]; ?></td>
                         <td class="btn-group">
-                            <a href="update.php?" class="btn btn-primary btn-sm ms-2">Update</a>
-                            <a href="admin.php?action=delete&" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="update.php?studentid=<?php echo $row["regno."]; ?>" class="btn btn-primary btn-sm ms-2">Update</a>
+                            <a href="admin.php?action=delete&studentid=<?php echo $row["regno."]; ?>" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
                 <?php
@@ -324,11 +324,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
                         <select class="form-control mb-2" id="coursename" name="coursename">
                             <option value="">--Click to Select--</option>
-                            <option value="frontend" disabled>Frontend</option>
+                            <option value="frontend">Frontend</option>
                             <option value="backend">Backend</option>
-                            <option value="fullstack" disabled>Fullstack</option>
-                            <option value="devops" disabled>Devops</option>
-                            <option value="cloud" disabled>Cloud</option>
+                            <option value="fullstack">Fullstack</option>
+                            <option value="devops">Devops</option>
+                            <option value="cloud">Cloud</option>
                         </select>
                         <?php if (isset($errors["coursename"])) { ?>
                             <small class="error-message"><?php echo $errors["coursename"]; ?></small>

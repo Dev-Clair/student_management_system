@@ -188,12 +188,12 @@ class DbTableOps
             return [];
         }
 
-        $this->conn->close(); // Close Connection Object
+        // $this->conn->close(); // Close Connection Object
         return $columnNames;
     }
 
     /**
-     * @param string $tableName = "Name of table created with the createTable function in the CreateTable Class"
+     * @param string $tableName = "Name of table created with the createTable function"
      * @param array $sanitizedData = ["fieldName" => $fieldValue, "fieldName" => $fieldValue, "fieldName" => $fieldValue, ...]
      */
     public function createRecords(string $tableName, array $sanitizedData): bool
@@ -202,19 +202,20 @@ class DbTableOps
             die("No database connection available.");
         }
 
-        // $columns = $this->getColumnNames($tableName);
         $columns = implode(",", array_keys($sanitizedData));
         $placeholders = implode(",", array_fill(0, count($sanitizedData), "?"));
         $types = $this->getBindParamTypes($sanitizedData);
-        $sql_query = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
+        $sql_query = "INSERT INTO $tableName $columns VALUES $placeholders";
 
         $stmt = $this->conn->prepare($sql_query);
+
         if (!$stmt) {
             die("Error in prepared statement: " . $this->conn->error);
         }
 
         $stmt->bind_param($types, ...array_values($sanitizedData));
         $status = $stmt->execute();
+
         if (!$status) {
             die("Error executing statement: " . $stmt->error);
         }
