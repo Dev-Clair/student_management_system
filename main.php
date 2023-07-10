@@ -1,11 +1,23 @@
 <?php
+session_start(); // Starts session for current script
+// Retrieve Session Variables and verify loginStatus
+$userID = $_SESSION['userID'];
+$loginStatus = $_SESSION['loginStatus'];
+if ($userID === null && $loginStatus !== false) {
+    // Redirect to login page withinvalid login status
+    $errorMessage = "Invalid Login Status! Please login again.";
+    header('Location: index.php?errorMessage=' . urlencode($errorMessage));
+    exit();
+}
+session_regenerate_id();
+
 require_once  __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = []; // Declare an error array variable
     $validinputs = []; // Declare an empty  array to store valid form fields
     $invalidinputs = []; // Declare an empty  array to store invalid form fields
-    if (filter_has_var(INPUT_POST, 'gradeForm')) {
+    if (filter_has_var(INPUT_POST, 'submitsgradeForm')) {
         // Grade Form Processing
 
         /** Studentname field */
@@ -93,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($errors)) {
             // Redirect to main page with error message
             $errorMessage = "Invalid Entries";
-            header('Location: main.php?errorMessage=' . $errorMessage);
+            header('Location: main.php?errorMessage=' . urlencode($errorMessage));
             exit();
         }
         // Submits Form Data
@@ -105,13 +117,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($record) {
             // Redirect to main page with success message
             $successMessage = "Entries Added Successfully";
-            header('Location: main.php?successMessage=' . $successMessage);
+            header('Location: main.php?successMessage=' . urlencode($successMessage));
             exit();
         }
     }
     // Redirect to main page with error message
     $errorMessage = "Error! Process failed, Please try again.";
-    header('Location: main.php?errorMessage=' . $errorMessage);
+    header('Location: main.php?errorMessage=' . urlencode($errorMessage));
     exit();
 }
 ?>
@@ -193,7 +205,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                 <?php } ?>
             </div>
             <div class="form-group float-end mb-4 pt-4">
-                <button type="submit" name="gradeForm" class="btn btn-primary">Submit</button>
+                <button type="submit" name="submitsgradeForm" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>

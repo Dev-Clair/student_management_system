@@ -1,6 +1,19 @@
 <?php
+session_start(); // Starts session for current script
+// Retrieve Session Variables and verify loginStatus
+$userID = $_SESSION['userID'];
+$loginStatus = $_SESSION['loginStatus'];
+if ($userID === null && $loginStatus !== false) {
+    // Redirect to login page withinvalid login status
+    $errorMessage = "Invalid Login Status! Please login again.";
+    header('Location: index.php?errorMessage=' . urlencode($errorMessage));
+    exit();
+}
+session_regenerate_id();
+
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = []; // Declare an error array variable
@@ -135,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = new DbTableOps($conn);
         global $coursename;
         $selectedcourse = $coursename;
-        $fieldname = "`modulename`";
+        $fieldName = "`modulename`";
         $moduleoptions = $conn->retrieveMultipleValues("modules", $fieldName, $selectedcourse);
         $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 

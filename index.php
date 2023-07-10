@@ -4,6 +4,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $userinputs = []; // Declare an empty  array to store form field values
   $errors = []; // Declare an empty  array to store errors
+  $loginStatus = false; // Declare and initialize loginSttus to false
   if (filter_has_var(INPUT_POST, 'loginForm')) {
     // Login Form Processing
 
@@ -34,6 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       header('Location: index.php?loginErrorMessage=' . urlencode($errorMessage));
       exit();
     }
+    // Start and save userID and loginStatus to session global variable
+    session_start();
+    $loginStatus = true;
+    $_SESSION['userID'] = $retrievedAdminID;
+    $_SESSION['loginStatus'] = $loginStatus;
     // Redirect to main page
     header('Location: main.php');
     exit();
