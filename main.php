@@ -46,29 +46,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /**Modulename field */
-        $regpattern = '/^[a-zA-Z]+*$/';
+        $regpattern = '/^[a-zA-Z\s]+$/';
         $modulename = filter_input(INPUT_POST, 'modulename', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
 
         if ($modulename !== false && $modulename !== null) {
-            $validinputs['modulename'] = ucwords($modulename);
+            $moduleValidInputs['modulename'] = ucwords($modulename);
         } else {
-            $errors['modulename'] = "Please choose a valid module";
-            $invalidinputs['modulename'] = $modulename;
+            $moduleErrors['modulename'] = "Please select a valid module";
+            $moduleInvalidInputs['modulename'] = $modulename;
         }
 
         /** Chaptername field */
-        $regpattern = '/^[a-zA-Z]+*$/';
+        $regpattern = '/^[a-zA-Z\s]+$/';
         $chaptername = filter_input(INPUT_POST, 'chaptername', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
 
         if ($chaptername !== false && $chaptername !== null) {
-            $validinputs['chaptername'] = ucwords($chaptername);
+            $chapterValidInputs['chaptername'] = ucwords($chaptername);
         } else {
-            $errors['chaptername'] = "Please select a valid chapter name";
-            $invalidinputs['chaptername'] = $chaptername;
+            $chapterErrors['chaptername'] = "Please enter a valid chapter name";
+            $chapterInvalidInputs['chaptername'] = $chaptername;
         }
 
         /** Exercise Score field */

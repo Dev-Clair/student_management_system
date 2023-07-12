@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (filter_has_var(INPUT_POST, 'submitstudentForm')) {
         // Student Form Processing
         $studentErrors = []; // Declare an error array variable
-        $studentValidinputs = []; // Declare an empty  array to store valid form fields
-        $studentInvalidinputs = []; // Declare an empty  array to store invalid form fields
+        $studentValidInputs = []; // Declare an empty  array to store valid form fields
+        $studentInvalidInputs = []; // Declare an empty  array to store invalid form fields
 
         /** Studentname field */
         $regpattern = '/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/';
@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ));
 
         if ($studentname !== false && $studentname !== null) {
-            $studentValidinputs['studentname'] = ucwords($studentname);
+            $studentValidInputs['studentname'] = ucwords($studentname);
         } else {
             $studentErrors['studentname'] = "Name cannot contain numbers or non-alphabetic characters";
-            $studentInvalidinputs['studentname'] = $studentname;
+            $studentInvalidInputs['studentname'] = $studentname;
         }
 
         /**Coursename field */
@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($coursename !== null && in_array($coursename, $courseoptions)) {
-            $studentValidinputs['coursename'] = $coursename;
+            $studentValidInputs['coursename'] = $coursename;
         } else {
             $studentErrors['coursename'] = "Please select a valid course";
-            $studentInvalidinputs['coursename'] = $coursename;
+            $studentInvalidInputs['coursename'] = $coursename;
         }
 
         if (!empty($studentErrors)) {
@@ -52,19 +52,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMessage = "Invalid Entries";
             $_SESSION['errorMessage'] = $errorMessage;
             $_SESSION['studentErrors'] = $studentErrors;
-            $_SESSION['studentInvalidinputs'] = $studentInvalidinputs;
+            $_SESSION['studentInvalidInputs'] = $studentInvalidInputs;
             header('Location: admin.php');
             exit();
         }
         // Submits Form Data
         $regNo = time();
-        $studentValidinputs['regno.'] = $regNo; // Assign registration number
-        var_dump($stuentValidinputs);
+        $studentValidInputs['regno.'] = $regNo; // Assign registration number
+        var_dump($studentValidInputs);
         $databaseName = "student";
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
-        $tableName = $databaseName . "." . $studentValidinputs['coursename'];
-        $status = $conn->createRecords($tableName, $studentValidinputs);
+        $tableName = $databaseName . "." . $studentValidInputs['coursename'];
+        $status = $conn->createRecords($tableName, $studentValidInputs);
         if ($status) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
@@ -77,53 +77,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /** ADD MODULE FORM */
     if (filter_has_var(INPUT_POST, 'submitsmoduleForm')) {
         // Module Form Processing
-        $errors = []; // Declare an error array variable
-        $validinputs = []; // Declare an empty  array to store valid form fields
-        $invalidinputs = []; // Declare an empty  array to store invalid form fields
+        $moduleErrors = []; // Declare an error array variable
+        $moduleValidInputs = []; // Declare an empty  array to store valid form fields
+        $moduleInvalidInputs = []; // Declare an empty  array to store invalid form fields
 
         /**Coursename field */
         $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
         $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($coursename !== null && in_array($coursename, $courseoptions)) {
-            $validinputs['coursename'] = $coursename;
+            $moduleValidInputs['coursename'] = $coursename;
         } else {
-            $errors['coursename'] = "Please select a valid course";
-            $invalidinputs['coursename'] = $coursename;
+            $moduleErrors['coursename'] = "Please select a valid course";
+            $moduleInvalidInputs['coursename'] = $coursename;
         }
 
         /** ModuleID field */
-        $regpattern = '/^[A-Za-z]+[\s]{1}[\d]{2}$/';
+        $regpattern = '/^[A-Za-z]+[\s]{1}[\d]{1,2}$/';
         $moduleid = filter_input(INPUT_POST, 'moduleid', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
 
         if ($moduleid !== false && $moduleid !== null) {
-            $validinputs['moduleid'] = $moduleid;
+            $moduleValidInputs['moduleid'] = $moduleid;
         } else {
-            $errors['moduleid'] = "Invalid Module ID";
-            $invalidinputs['moduleid'] = $moduleid;
+            $moduleErrors['moduleid'] = "Invalid Module ID";
+            $moduleInvalidInputs['moduleid'] = $moduleid;
         }
 
         /**Modulename field */
-        $regpattern = '/^[a-zA-Z]+*$/';
+        $regpattern = '/^[a-zA-Z\s]+$/';
         $modulename = filter_input(INPUT_POST, 'modulename', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
 
         if ($modulename !== false && $modulename !== null) {
-            $validinputs['modulename'] = ucwords($modulename);
+            $moduleValidInputs['modulename'] = ucwords($modulename);
         } else {
-            $errors['modulename'] = "Please choose a valid module";
-            $invalidinputs['modulename'] = $modulename;
+            $moduleErrors['modulename'] = "Please select a valid module";
+            $moduleInvalidInputs['modulename'] = $modulename;
         }
 
-        if (!empty($errors)) {
+        if (!empty($moduleErrors)) {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
             $_SESSION['errorMessage'] = $errorMessage;
-            $_SESSION['errors'] = $errors;
-            $_SESSION['invalidinputs'] = $invalidinputs;
+            $_SESSION['moduleErrors'] = $moduleErrors;
+            $_SESSION['moduleInvalidInputs'] = $moduleInvalidInputs;
             header('Location: admin.php');
             exit();
         }
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
         $tableName = $databaseName . "." . "modules";
-        $record = $conn->createRecords("`$tableName`", $validinputs);
+        $record = $conn->createRecords("`$tableName`", $moduleValidInputs);
         if ($record) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
@@ -145,19 +145,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /** ADD CHAPTER FORM */
     if (filter_has_var(INPUT_POST, 'submitschapterForm')) {
         // Chapter Form Validation and Processing
-        $errors = []; // Declare an error array variable
-        $validinputs = []; // Declare an empty  array to store valid form fields
-        $invalidinputs = []; // Declare an empty  array to store invalid form fields
+        $chapterErrors = []; // Declare an error array variable
+        $chapterValidInputs = []; // Declare an empty  array to store valid form fields
+        $chapterInvalidInputs = []; // Declare an empty  array to store invalid form fields
 
         /**Coursename field */
         $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
         $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($coursename !== null && in_array($coursename, $courseoptions)) {
-            $validinputs['coursename'] = $coursename;
+            $chapterValidInputs['coursename'] = $coursename;
         } else {
-            $errors['coursename'] = "Please select a valid course";
-            $invalidinputs['coursename'] = $coursename;
+            $chapterErrors['coursename'] = "Please select a valid course";
+            $chapterInvalidInputs['coursename'] = $coursename;
         }
 
         /** Modulename field */
@@ -171,44 +171,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($modulename !== null && in_array($modulename, $moduleoptions)) {
-            $validinputs['modulename'] = $modulename;
+            $chapterValidInputs['modulename'] = $modulename;
         } else {
-            $errors['modulename'] = "Please choose a valid module";
-            $invalidinputs['modulename'] = $modulename;
+            $chapterErrors['modulename'] = "Please select a valid module";
+            $chapterInvalidInputs['modulename'] = $modulename;
         }
 
         /** ChapterID field */
-        $regpattern = '/^[A-Z]+[\d]+$/';
+        $regpattern = '/^[A-Z\d.]+$/';
         $chapterid = filter_input(INPUT_POST, 'chapterid', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
 
         if ($chapterid !== false && $chapterid !== null) {
-            $validinputs['chapterid'] = $chapterid;
+            $chapterValidInputs['chapterid'] = $chapterid;
         } else {
-            $errors['chapterid'] = "Invalid! Can contain cap. letters and numbers only";
-            $invalidinputs['chapterid'] = $chapterid;
+            $chapterErrors['chapterid'] = "Invalid! ChapterID can contain cap. letters and numbers only";
+            $chapterInvalidInputs['chapterid'] = $chapterid;
         }
 
         /** Chaptername field */
-        $regpattern = '/^[a-zA-Z]+*$/';
+        $regpattern = '/^[a-zA-Z\s]+$/';
         $chaptername = filter_input(INPUT_POST, 'chaptername', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
 
         if ($chaptername !== false && $chaptername !== null) {
-            $validinputs['chaptername'] = ucwords($chaptername);
+            $chapterValidInputs['chaptername'] = ucwords($chaptername);
         } else {
-            $errors['chaptername'] = "Please select a valid chapter name";
-            $invalidinputs['chaptername'] = $chaptername;
+            $chapterErrors['chaptername'] = "Please enter a valid chapter name";
+            $chapterInvalidInputs['chaptername'] = $chaptername;
         }
 
-        if (!empty($errors)) {
+        if (!empty($chapterErrors)) {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
             $_SESSION['errorMessage'] = $errorMessage;
-            $_SESSION['errors'] = $errors;
-            $_SESSION['invalidinputs'] = $invalidinputs;
+            $_SESSION['chapterErrors'] = $chapterErrors;
+            $_SESSION['chapterInvalidInputs'] = $chapterInvalidInputs;
             header('Location: admin.php');
             exit();
         }
@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
         $tableName = $databaseName . "." . "chapters";
-        $record = $conn->createRecords("`$tableName`", $validinputs);
+        $record = $conn->createRecords("`$tableName`", $chapterValidInputs);
         if ($record) {
             // Redirect to admin page with success message
             $successMessage = "Entries Added Successfully";
@@ -331,8 +331,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                 <form id="studentForm" name="studentForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="form-group">
                         <label class="mb-2" for="studentname"><strong>Name:</strong></label>
-                        <input type="text" class="form-control mb-2" id="studentname" name="studentname" value="<?php echo htmlspecialchars($_SESSION['invalidinputs']['studentname'] ?? ''); ?>" autocomplete="off" placeholder="Enter name" />
-                        <?php if (isset($_SESSION['studentErrors'])) { ?>
+                        <input type="text" class="form-control mb-2" id="studentname" name="studentname" value="<?php echo htmlspecialchars($_SESSION['studentInvalidInputs']['studentname'] ?? ''); ?>" autocomplete="off" placeholder="Enter name" />
+                        <?php if (isset($_SESSION['studentErrors']['studentname'])) { ?>
                             <small class="error-message"><?php echo htmlspecialchars($_SESSION['studentErrors']['studentname']); ?></small>
                         <?php } ?>
                     </div>
@@ -346,7 +346,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                             <option value="devops">Devops</option>
                             <option value="cloud">Cloud</option>
                         </select>
-                        <?php if (isset($_SESSION['studentErrors'])) { ?>
+                        <?php if (isset($_SESSION['studentErrors']['coursename'])) { ?>
                             <small class="error-message"><?php echo htmlspecialchars($_SESSION['studentErrors']['coursename']); ?></small>
                         <?php } ?>
                     </div>
@@ -383,27 +383,27 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                             <option value="devops" disabled>Devops</option>
                             <option value="cloud" disabled>Cloud</option>
                         </select>
-                        <?php if (isset($_SESSION['errors'])) { ?>
-                            <small class="error-message"><?php echo htmlspecialchars($_SESSION['errors']['coursename']); ?></small>
+                        <?php if (isset($_SESSION['moduleErrors']['coursename'])) { ?>
+                            <small class="error-message"><?php echo htmlspecialchars($_SESSION['moduleErrors']['coursename']); ?></small>
                         <?php } ?>
                     </div>
                     <div class="form-group mb-2">
                         <label class="mb-2" for="moduleid"><strong>Module ID:</strong></label>
-                        <input type="text" class="form-control mb-2" id="moduleid" name="moduleid" value="<?php echo htmlspecialchars($_SESSION['invalidinputs']['moduleid'] ?? ''); ?>" autocomplete="off" placeholder="Enter module ID" />
-                        <?php if (isset($_SESSION['errors'])) { ?>
-                            <small class="error-message"><?php echo htmlspecialchars($_SESSION['errors']['moduleid']); ?></small>
+                        <input type="text" class="form-control mb-2" id="moduleid" name="moduleid" value="<?php echo htmlspecialchars($_SESSION['moduleInvalidInputs']['moduleid'] ?? ''); ?>" autocomplete="off" placeholder="Enter module ID" />
+                        <?php if (isset($_SESSION['moduleErrors']['moduleid'])) { ?>
+                            <small class="error-message"><?php echo htmlspecialchars($_SESSION['moduleErrors']['moduleid']); ?></small>
                         <?php } ?>
                     </div>
                     <div class="form-group mb-2">
                         <label class="mb-2" for="modulename"><strong>Module Name:</strong></label>
-                        <input type="text" class="form-control mb-2" id="modulename" name="modulename" value="<?php echo htmlspecialchars($_SESSION['invalidinputs']['modulename'] ?? ''); ?>" autocomplete="off" placeholder="Enter module name" />
-                        <?php if (isset($_SESSION['errors'])) { ?>
-                            <small class="error-message"><?php echo htmlspecialchars($_SESSION['errors']['modulename']); ?></small>
+                        <input type="text" class="form-control mb-2" id="modulename" name="modulename" value="<?php echo htmlspecialchars($_SESSION['moduleInvalidInputs']['modulename'] ?? ''); ?>" autocomplete="off" placeholder="Enter module name" />
+                        <?php if (isset($_SESSION['moduleErrors']['modulenane'])) { ?>
+                            <small class="error-message"><?php echo htmlspecialchars($_SESSION['moduleErrors']['modulename']); ?></small>
                         <?php } ?>
                     </div>
                     <?php
-                    // unset($_SESSION['invalidinputs']);
-                    // unset($_SESSION['errors']);
+                    unset($_SESSION['moduleInvalidInputs']);
+                    unset($_SESSION['moduleErrors']);
                     ?>
                     <button type="submit" name="submitsmoduleForm" class="float-end btn btn-primary">Submit</button>
                 </form>
@@ -432,8 +432,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                             <option value="devops" disabled>Devops</option>
                             <option value="cloud" disabled>Cloud</option>
                         </select>
-                        <?php if (isset($_SESSION['errors'])) { ?>
-                            <small class="error-message"><?php echo $_SESSION['errors']['coursename']; ?></small>
+                        <?php if (isset($_SESSION['chapterErrors']['coursename'])) { ?>
+                            <small class="error-message"><?php echo $_SESSION['chaapterErrors']['coursename']; ?></small>
                         <?php } ?>
                     </div>
                     <div class=" form-group">
@@ -454,33 +454,32 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                             }
                             ?>
                         </select>
-                        <?php if (isset($_SESSION['errors'])) { ?>
-                            <small class="error-message"><?php echo $_SESSION['errors']['modulename']; ?></small>
+                        <?php if (isset($_SESSION['chapterErrors']['modulename'])) { ?>
+                            <small class="error-message"><?php echo $_SESSION['chapterErrors']['modulename']; ?></small>
                         <?php } ?>
                     </div>
                     <div class="form-group">
                         <label class="mb-2" for="chapterid"><strong>Chapter ID:</strong></label>
-                        <input type="text" class="form-control mb-2" id="chapterid" name="chapterid" value="<?php echo htmlspecialchars($_SESSION['invalidinputs']['chapterid'] ?? ''); ?>" autocomplete="off" placeholder="Enter chapter ID" />
-                        <?php if (isset($_SESSION['errors'])) { ?>
-                            <small class="error-message"><?php echo $_SESSION['errors']['chapterid']; ?></small>
+                        <input type="text" class="form-control mb-2" id="chapterid" name="chapterid" value="<?php echo htmlspecialchars($_SESSION['chapterInvalidInputs']['chapterid'] ?? ''); ?>" autocomplete="off" placeholder="Enter chapter ID" />
+                        <?php if (isset($_SESSION['chapterErrors']['chapterid'])) { ?>
+                            <small class="error-message"><?php echo $_SESSION['chapterErrors']['chapterid']; ?></small>
                         <?php } ?>
                     </div>
                     <div class="form-group">
                         <label class="mb-2" for="chaptername"><strong>Chapter Name:</strong></label>
-                        <input type="text" class="form-control mb-2" id="chaptername" name="chaptername" value="<?php echo htmlspecialchars($_SESSION['invalidinputs']['chaptername'] ?? ''); ?>" autocomplete="off" placeholder="Enter chapter name" />
-                        <?php if (isset($_SESSION['errors'])) { ?>
-                            <small class="error-message"><?php echo $_SESSION['errors']['chaptername']; ?></small>
+                        <input type="text" class="form-control mb-2" id="chaptername" name="chaptername" value="<?php echo htmlspecialchars($_SESSION['chapterInvalidInputs']['chaptername'] ?? ''); ?>" autocomplete="off" placeholder="Enter chapter name" />
+                        <?php if (isset($_SESSION['chapterErrors']['chaptername'])) { ?>
+                            <small class="error-message"><?php echo $_SESSION['chapterErrors']['chaptername']; ?></small>
                         <?php } ?>
                     </div>
                     <?php
-                    // unset($_SESSION['invalidinputs']);
-                    // unset($_SESSION['errors']);
+                    unset($_SESSION['chapterInvalidInputs']);
+                    unset($_SESSION['chapterErrors']);
                     ?>
                     <button type="submit" name="submitschapterForm" class="float-end btn btn-primary">
                         Submit
                     </button>
                 </form>
-
             </div>
         </div>
     </div>
