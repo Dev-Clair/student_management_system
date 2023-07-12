@@ -202,7 +202,10 @@ class DbTableOps
             die("No database connection available.");
         }
 
-        $columns = implode(",", array_keys($sanitizedData));
+        $columns = implode(",", array_map(function ($column) {
+            return "`$column`";
+        }, array_keys($sanitizedData)));
+
         $placeholders = implode(",", array_fill(0, count($sanitizedData), "?"));
         $types = $this->getBindParamTypes($sanitizedData);
         $sql_query = "INSERT INTO $tableName $columns VALUES $placeholders";
@@ -367,7 +370,7 @@ class DbTableOps
 
         $updateFields = "";
         foreach ($sanitizedData as $column => $value) {
-            $updateFields .= "$column=?,";
+            $updateFields .= "`$column`=?,";
         }
         $updateFields = rtrim($updateFields, ',');
 
