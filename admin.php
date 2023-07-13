@@ -132,8 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
         $tableName = $databaseName . "." . "modules";
-        $record = $conn->createRecords("`$tableName`", $moduleValidInputs);
-        if ($record) {
+        $status = $conn->createRecords("`$tableName`", $moduleValidInputs);
+        if ($status) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
             $_SESSION['successMessage'] = $successMessage;
@@ -217,8 +217,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
         $tableName = $databaseName . "." . "chapters";
-        $record = $conn->createRecords("`$tableName`", $chapterValidInputs);
-        if ($record) {
+        $status = $conn->createRecords("`$tableName`", $chapterValidInputs);
+        if ($status) {
             // Redirect to admin page with success message
             $successMessage = "Entries Added Successfully";
             $_SESSION['successMessage'] = $successMessage;

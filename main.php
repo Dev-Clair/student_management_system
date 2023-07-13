@@ -15,9 +15,9 @@ session_regenerate_id();
 require_once  __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $errors = []; // Declare an error array variable
-    $validinputs = []; // Declare an empty  array to store valid form fields
-    $invalidinputs = []; // Declare an empty  array to store invalid form fields
+    $gradeErrors = []; // Declare an error array variable
+    $gradeValidInputs = []; // Declare an empty  array to store valid form fields
+    $gradeInvalidInputs = []; // Declare an empty  array to store invalid form fields
     if (filter_has_var(INPUT_POST, 'submitsgradeForm')) {
         // Grade Form Processing
 
@@ -28,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ));
 
         if ($studentname !== false && $studentname !== null) {
-            $validinputs['studentname'] = ucwords($studentname);
+            $gradeValidInputs['studentname'] = ucwords($studentname);
         } else {
-            $errors['studentname'] = "Name cannot contain numbers or non-alpahbetic characters";
-            $invalidinputs['studentname'] = $studentname;
+            $gradeErrors['studentname'] = "Name cannot contain numbers or non-alpahbetic characters";
+            $gradeInvalidInputs['studentname'] = $studentname;
         }
 
         /**Coursename field */
@@ -39,10 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($coursename !== null && in_array($coursename, $courseoptions)) {
-            $validinputs['coursename'] = $coursename;
+            $gradeValidInputs['coursename'] = $coursename;
         } else {
-            $errors['coursename'] = "Please select a valid course";
-            $invalidinputs['coursename'] = $coursename;
+            $gradeErrors['coursename'] = "Please select a valid course";
+            $gradeInvalidInputs['coursename'] = $coursename;
         }
 
         /**Modulename field */
@@ -52,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ));
 
         if ($modulename !== false && $modulename !== null) {
-            $moduleValidInputs['modulename'] = ucwords($modulename);
+            $gradeValidInputs['modulename'] = ucwords($modulename);
         } else {
-            $moduleErrors['modulename'] = "Please select a valid module";
-            $moduleInvalidInputs['modulename'] = $modulename;
+            $gradeErrors['modulename'] = "Please select a valid module";
+            $gradeInvalidInputs['modulename'] = $modulename;
         }
 
         /** Chaptername field */
@@ -65,10 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ));
 
         if ($chaptername !== false && $chaptername !== null) {
-            $chapterValidInputs['chaptername'] = ucwords($chaptername);
+            $gradeValidInputs['chaptername'] = ucwords($chaptername);
         } else {
-            $chapterErrors['chaptername'] = "Please enter a valid chapter name";
-            $chapterInvalidInputs['chaptername'] = $chaptername;
+            $gradeErrors['chaptername'] = "Please enter a valid chapter name";
+            $gradeInvalidInputs['chaptername'] = $chaptername;
         }
 
         /** Exercise Score field */
@@ -77,14 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($exercisescore !== false && $exercisescore !== null) {
             // Variable is valid
-            $validinputs['exercisescore'] = $exercisescore;
+            $gradeValidInputs['exercisescore'] = $exercisescore;
         } elseif ($exercisescore === null) {
             // Variable not set
-            $errors['exercisescore'] = "Please enter a score";
+            $gradeErrors['exercisescore'] = "Please enter a score";
         } else {
             // Variable is invalid
-            $errors['exercisescore'] = "Please enter a valid score (0-10)";
-            $invalidinputs['exercisescore'] = $exercisescore;
+            $gradeErrors['exercisescore'] = "Please enter a valid score (0-10)";
+            $gradeInvalidInputs['exercisescore'] = $exercisescore;
         }
 
         /** Project Score field */
@@ -93,20 +93,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($projectscore !== false && $projectscore !== null) {
             // Variable is valid
-            $validinputs['projectscore'] = $projectscore;
+            $gradeValidInputs['projectscore'] = $projectscore;
         } elseif ($exercisescore === null) {
             // Variable not set
-            $errors['projectscore'] = "Please enter a score";
+            $gradeErrors['projectscore'] = "Please enter a score";
         } else {
             // Variable is invalid
-            $errors['projectscore'] = "Please enter a valid score (0-100)";
-            $invalidinputs['projectscore'] = $projectscore;
+            $gradeErrors['projectscore'] = "Please enter a valid score (0-100)";
+            $gradeInvalidInputs['projectscore'] = $projectscore;
         }
 
-        if (!empty($errors)) {
+        if (!empty($gradeErrors)) {
             // Redirect to main page with error message
             $errorMessage = "Invalid Entries";
             $_SESSION['errorMessage'] = $errorMessage;
+            $_SESSION['gradeErrors'] = $gradeErrors;
+            $_SESSION['gradeValidInputs'] = $gradeValidInputs;
+            $_SESSION['gradeInvalidInputs'] = $gradeInvalidInputs;
             header('Location: main.php');
             exit();
         }
@@ -114,9 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $databaseName = "grade";
         $conn = tableOpConnection($databaseName);
         $conn = new DbTableOps($conn);
-        $tableName = $validinputs['coursename'];
-        $record = $conn->createRecords("$tableName", $validinputs);
-        if ($record) {
+        $tableName = $gradeValidInputs['coursename'];
+        $status = $conn->createRecords("$tableName", $gradeValidInputs);
+        if ($status) {
             // Redirect to main page with success message
             $successMessage = "Entries Added Successfully";
             $_SESSION['successMessage'] = $successMessage;
@@ -156,9 +159,9 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
         <form id="gradeForm" name="gradeForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label class="form-group mb-2" for="studentname"><strong>Name:</strong></label>
-                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" value="<?php echo htmlspecialchars($invalidinputs['studentname'] ?? ''); ?>" placeholder="Enter Name" autocomplete="off">
-                <?php if (isset($errors["studentname"])) { ?>
-                    <small class="error-message"><?php echo $errors["studentname"]; ?></small>
+                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" value="<?php echo htmlspecialchars($_SESSION['gradeInvalidInputs']['studentname'] ?? ''); ?>" placeholder="Enter Name" autocomplete="off">
+                <?php if (isset($_SESSION['gradeErrors']['studentname'])) { ?>
+                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['studentname']); ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
@@ -171,8 +174,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                     <option value="devops" disabled>Devops</option>
                     <option value="cloud" disabled>Cloud</option>
                 </select>
-                <?php if (isset($errors["coursename"])) { ?>
-                    <small class="error-message"><?php echo $errors["coursename"]; ?></small>
+                <?php if (isset($_SESSION['gradeErrors']['coursename'])) { ?>
+                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['gradeErrors']['coursename']); ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
@@ -193,8 +196,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                     }
                     ?>
                 </select>
-                <?php if (isset($errors["modulename"])) { ?>
-                    <small class="error-message"><?php echo $errors["modulename"]; ?></small>
+                <?php if (isset($_SESION['gradeErrors']['modulename'])) { ?>
+                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['modulename']); ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
@@ -221,18 +224,22 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="exerciseScore"><strong>Exercise Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" value="<?php echo htmlspecialchars($invalidinputs['exercisescore'] ?? ''); ?>" placeholder="Enter exercise score" autocomplete="off">
-                <?php if (isset($errors["studentname"])) { ?>
-                    <small class="error-message"><?php echo $errors["exercisescore"]; ?></small>
+                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" value="<?php echo htmlspecialchars($_SESSION['gradeInvalidInputs']['exercisescore'] ?? ''); ?>" placeholder="Enter exercise score" autocomplete="off">
+                <?php if (isset($_SESSION['gradeErrors']['exercisescore'])) { ?>
+                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['exercisescore']); ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="projectScore"><strong>Project Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" value="<?php echo htmlspecialchars($invalidinputs['projectscore'] ?? ''); ?>" placeholder="Enter project score" autocomplete="off">
-                <?php if (isset($errors["studentname"])) { ?>
-                    <small class="error-message"><?php echo $errors["projectscore"]; ?></small>
+                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" value="<?php echo htmlspecialchars($_SESSION['gradeInvalidInputs']['projectscore'] ?? ''); ?>" placeholder="Enter project score" autocomplete="off">
+                <?php if (isset($_SESSION['gradeErrors']['projectscore'])) { ?>
+                    <small class="error-message"><?php echo $_SERVER['gradeErrors']['projectscore']; ?></small>
                 <?php } ?>
             </div>
+            <?php
+            unset($_SESSION['gradeInvalidInputs']);
+            unset($_SESSION['gradeErrors']);
+            ?>
             <div class="form-group float-end mb-4 pt-4">
                 <button type="submit" name="submitsgradeForm" class="btn btn-primary">Submit</button>
             </div>
