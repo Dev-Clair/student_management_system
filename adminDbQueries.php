@@ -51,7 +51,7 @@ $email = strtolower(strval(readline("Enter email: ")));
 $password = readline("Enter Password: ");
 $password_confirmation = readline("Re-Enter Password: ");
 
-$password = ($password === $password_confirmation) ? $password : die("Password doesn't match");
+$password = ($password === $password_confirmation) ? $password : throw new Exception("Password doesn't match");
 $passwordhash = password_hash($password, PASSWORD_BCRYPT);
 
 $newAdminData = array(

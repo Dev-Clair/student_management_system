@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['successMessage']);
       }
       ?>
+      <!-- <button type="button" class="flex-right btn btn-success" onclick="executeRegistration()">Register</button> -->
       <form id="loginForm" name="loginForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <div class="form-group mb-3">
           <label for="login" class="form-label">Login-ID:</label>
@@ -103,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" value="" autocomplete="off" />
         </div>
         <button type="submit" name="loginForm" class="btn btn-primary">Log in</button>
-      </form>
     </div>
   </section>
 
