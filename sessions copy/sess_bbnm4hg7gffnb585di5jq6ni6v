@@ -1,0 +1,1 @@
+userID|s:7:"Usr1995";loginStatus|b:1;studentInvalidInputs|a:2:{s:11:"studentname";b:0;s:10:"coursename";s:0:"";}errorMessage|s:15:"Invalid Entries";chapterErrors|a:2:{s:10:"modulename";s:28:"Please choose a valid module";s:9:"chapterid";s:60:"Invalid! ChapterID can contain cap. letters and numbers only";}chapterInvalidInputs|a:2:{s:10:"modulename";s:0:"";s:9:"chapterid";b:0;}

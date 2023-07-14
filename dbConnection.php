@@ -16,13 +16,12 @@ function dbConnection(string $databaseName): bool
     $conn = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
     $conn = $conn->getConnection();
 
-    if (!is_resource($conn)) {
+    if (!$conn instanceof mysqli) {
         throw new Exception('Connection failed.');
     }
 
     $sql_query = "CREATE DATABASE $databaseName";
     if ($conn->query($sql_query) === true) {
-        $conn->closeConnection();
         return true;
     } else {
         throw new Exception('Database creation failed: ' . $conn->error);
@@ -30,17 +29,19 @@ function dbConnection(string $databaseName): bool
 }
 
 /******* Create Table ******/
-function tableConnection(string $databaseName): ?mysqli
+function tableConnection(string $databaseName): DbTable
 {
     $conn = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"], $databaseName);
     $conn = $conn->getConnection();
+    $conn = new DbTable($conn);
     return $conn;
 }
 
 /******* Table Read and Write Operations ******/
-function tableOpConnection(string $databaseName): ?mysqli
+function tableOpConnection(string $databaseName): DbTableOps
 {
     $connection = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"], $databaseName);
     $conn = $connection->getConnection();
+    $conn = new DbTableOps($conn);
     return $conn;
 }

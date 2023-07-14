@@ -1,0 +1,1 @@
+userID|s:7:"Usr1995";loginStatus|b:1;errorMessage|s:15:"Invalid Entries";studentErrors|a:2:{s:11:"studentname";s:56:"Name cannot contain numbers or non-alphabetic characters";s:10:"coursename";s:28:"Please select a valid course";}studentInvalidInputs|a:2:{s:11:"studentname";b:0;s:10:"coursename";s:0:"";}

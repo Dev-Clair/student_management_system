@@ -11,7 +11,7 @@ class DbConnection
     /**
      * Constructor, initializes the connection settings.
      *
-     * @param string $serverName Server name or IP address.
+     * @param string $serverName Server name (localhost) or IP address(remote host).
      * @param string $userName   Database username.
      * @param string $password   Database password.
      * @param string|null $database   Database name (optional).
@@ -39,7 +39,6 @@ class DbConnection
 
     /**
      * Retrieves resource: database connection object.
-     *
      * @return mysqli|null Database connection object.
      */
     public function getConnection(): ?mysqli

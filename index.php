@@ -25,8 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve User Details from Database 
     $databaseName = "login";
     $conn = tableOpConnection($databaseName);
-    $dbTable = new DbTableOps($conn);
-    $record = $dbTable->retrieveSingleRecord("admin", "adminID", $loginID);
+    $record = $conn->retrieveSingleRecord("admin", "adminID", $loginID);
     $retrievedAdminID = $record['adminID'];
     $retrievedPassword = $record['password_hash'];
     // Verify Form Data

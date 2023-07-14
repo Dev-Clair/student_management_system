@@ -116,7 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Submits Form Data
         $databaseName = "grade";
         $conn = tableOpConnection($databaseName);
-        $conn = new DbTableOps($conn);
         $tableName = $gradeValidInputs['coursename'];
         $status = $conn->createRecords("$tableName", $gradeValidInputs);
         if ($status) {
@@ -180,19 +179,17 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="module"><strong>Select Module:</strong></label>
-                <select class="mb-2 form-control" id="module" name="module">
+                <select class="form-control mb-2" id="modulename" name="modulename">
                     <option value="">--Click to Select--</option>
                     <?php
                     $databaseName = "course";
                     $conn = tableOpConnection($databaseName);
-                    $conn = new DbTableOps($conn);
-                    $selectedcourse = "backend"; // the $selectedcourse is hardcoded but i intend to improve this using ajax
-                    $moduleNameColumn = "`modulename`";
-                    $moduleNameValues = $conn->retrieveMultipleValues("modules", $moduleNameColumn, $selectedcourse);
-                    foreach ($moduleNameValues as $moduleName) {
-                    ?>
-                        <option value="<?php echo $moduleName; ?>"><?php echo ucwords($moduleName); ?></option>
-                    <?php
+                    $fieldName = "`modulename`";
+                    $comparefieldName = "`coursename`";
+                    $selectedCourse = "backend"; // Hardcoded, i intend to improve this in future using ajax
+                    $fieldNameValues = $conn->retrieveMultipleValues("modules", $fieldName, $comparefieldName, $selectedCourse);
+                    foreach ($fieldNameValues as $values) {
+                        echo '<option value="' . ucwords($values) . '">' . ucwords($values) . '</option>';
                     }
                     ?>
                 </select>
@@ -202,19 +199,17 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="chapter"><strong>Select Chapter:</strong></label>
-                <select class="mb-2 form-control" id="chapter" name="chapter">
+                <select class="form-control mb-2" id="chaptername" name="chaptername">
                     <option value="">--Click to Select--</option>
                     <?php
                     $databaseName = "module";
                     $conn = tableOpConnection($databaseName);
-                    $conn = new DbTableOps($conn);
-                    $selectedcourse = "backend"; // the $selectedcourse is hardcoded but i intend to improve this functionality using ajax
-                    $chapterNameColumn = "`chaptername`";
-                    $chapterNameValues = $conn->retrieveMultipleValues("chapters", $chapterNameColumn, $selectedcourse);
-                    foreach ($chapterNameValues as $chapterName) {
-                    ?>
-                        <option value="<?php echo $chapterName; ?>"><?php echo ucwords($chapterName); ?></option>
-                    <?php
+                    $fieldName = "`chaptername`";
+                    $comparefieldName = "`coursename`";
+                    $selectedCourse = "backend"; // Hardcoded, i intend to improve this in future using ajax
+                    $fieldNameValues = $conn->retrieveMultipleValues("chapters", $fieldName, $comparefieldName, $selectedCourse);
+                    foreach ($fieldNameValues as $values) {
+                        echo '<option value="' . ucwords($values) . '">' . ucwords($values) . '</option>';
                     }
                     ?>
                 </select>

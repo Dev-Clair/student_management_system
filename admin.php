@@ -62,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         var_dump($studentValidInputs);
         $databaseName = "student";
         $conn = tableOpConnection($databaseName);
-        $conn = new DbTableOps($conn);
         $tableName = $databaseName . "." . $studentValidInputs['coursename'];
         $status = $conn->createRecords($tableName, $studentValidInputs);
         if ($status) {
@@ -130,8 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Submits Form Data
         $databaseName = "course";
         $conn = tableOpConnection($databaseName);
-        $conn = new DbTableOps($conn);
-        $tableName = $databaseName . "." . "modules";
+        $tableName = "modules";
         $status = $conn->createRecords("`$tableName`", $moduleValidInputs);
         if ($status) {
             // Redirect to admin page with success message
@@ -163,11 +161,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         /** Modulename field */
         $databaseName = "course";
         $conn = tableOpConnection($databaseName);
-        $conn = new DbTableOps($conn);
         global $coursename;
         $selectedcourse = $coursename;
         $fieldName = "`modulename`";
-        $moduleoptions = $conn->retrieveMultipleValues("modules", $fieldName, $selectedcourse);
+        $comparefieldName = "`coursename`";
+        $moduleoptions = $conn->retrieveMultipleValues("modules", $fieldName, $comparefieldName, $selectedcourse);
         $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($modulename !== null && in_array($modulename, $moduleoptions)) {
@@ -178,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** ChapterID field */
-        $regpattern = '/^[A-Z\d.]+$/';
+        $regpattern = '/^[a-zA-Z-]{3}[\d]{1}\.[a-zA-Z-][\d]{1,2}[:]$/';
         $chapterid = filter_input(INPUT_POST, 'chapterid', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
@@ -191,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** Chaptername field */
-        $regpattern = '/^[a-zA-Z\s]+$/';
+        $regpattern = '/^[a-zA-Z\s,]+$/';
         $chaptername = filter_input(INPUT_POST, 'chaptername', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
@@ -215,8 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Submits Form Data
         $databaseName = "module";
         $conn = tableOpConnection($databaseName);
-        $conn = new DbTableOps($conn);
-        $tableName = $databaseName . "." . "chapters";
+        $tableName = "chapters";
         $status = $conn->createRecords("`$tableName`", $chapterValidInputs);
         if ($status) {
             // Redirect to admin page with success message
@@ -285,10 +282,9 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             // $conn = new DbTable($conn);
             // $tableNames = $conn->retrieveTableNames($databaseName);
             // $tableName = $tableNames[1];
-            $tableName = "backend";
+            $tableName = "backend"; //  Hardcoded, will be mproved in the future using ajax
             // displays table based on tablename
             $conn = tableOpConnection($databaseName);
-            $conn = new DbTableOps($conn);
             $records = $conn->retrieveAllRecords("$tableName");
             if (!empty($records)) {
                 $count = 0;
@@ -340,11 +336,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
                         <select class="form-control mb-2" id="coursename" name="coursename">
                             <option value="">--Click to Select--</option>
-                            <option value="frontend">Frontend</option>
+                            <option value="frontend" disabled>Frontend</option>
                             <option value="backend">Backend</option>
-                            <option value="fullstack">Fullstack</option>
-                            <option value="devops">Devops</option>
-                            <option value="cloud">Cloud</option>
+                            <option value="fullstack" disabled>Fullstack</option>
+                            <option value="devops" disabled>Devops</option>
+                            <option value="cloud" disabled>Cloud</option>
                         </select>
                         <?php if (isset($_SESSION['studentErrors']['coursename'])) { ?>
                             <small class="error-message"><?php echo htmlspecialchars($_SESSION['studentErrors']['coursename']); ?></small>
@@ -422,7 +418,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             </div>
             <div class="modal-body">
                 <form id="chapterForm" name="chapterForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                    <div class="form-group mb-2">
+                    <div class="form-group">
                         <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
                         <select class="form-control mb-2" id="coursename" name="coursename">
                             <option value="">--Click to Select--</option>
@@ -432,25 +428,23 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                             <option value="devops" disabled>Devops</option>
                             <option value="cloud" disabled>Cloud</option>
                         </select>
-                        <?php if (isset($_SESSION['chapterErrors']['coursename'])) { ?>
-                            <small class="error-message"><?php echo $_SESSION['chaapterErrors']['coursename']; ?></small>
+                        <?php if (isset($_SESSION['studentErrors'])) { ?>
+                            <small class="error-message"><?php echo htmlspecialchars($_SESSION['studentErrors']['coursename']); ?></small>
                         <?php } ?>
                     </div>
-                    <div class=" form-group">
-                        <label class="mb-2" for="modulename"><strong>Select Module::</strong></label>
+                    <div class="form-group">
+                        <label class="mb-2" for="modulename"><strong>Select Module:</strong></label>
                         <select class="form-control mb-2" id="modulename" name="modulename">
                             <option value="">--Click to Select--</option>
                             <?php
                             $databaseName = "course";
                             $conn = tableOpConnection($databaseName);
-                            $conn = new DbTableOps($conn);
-                            $selectedcourse = "backend"; // the $selectedcourse is hardcoded but i intend to improve this using ajax
-                            $moduleNameColumn = "`modulename`";
-                            $moduleNameValues = $conn->retrieveMultipleValues("modules", $moduleNameColumn, $selectedcourse);
-                            foreach ($moduleNameValues as $moduleName) {
-                            ?>
-                                <option value="<?php echo $moduleName; ?>"><?php echo ucwords($moduleName); ?></option>
-                            <?php
+                            $fieldName = "`modulename`";
+                            $comparefieldName = "`coursename`";
+                            $selectedCourse = "backend"; // Hardcoded, i intend to improve this in future using ajax
+                            $fieldNameValues = $conn->retrieveMultipleValues("modules", $fieldName, $comparefieldName, $selectedCourse);
+                            foreach ($fieldNameValues as $values) {
+                                echo '<option value="' . ucwords($values) . '">' . ucwords($values) . '</option>';
                             }
                             ?>
                         </select>
