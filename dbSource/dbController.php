@@ -9,6 +9,8 @@ class DbTable
 {
     private ?mysqli $conn;
 
+    // use DbConnection;
+
     /**
      * Constructor,
      * sources resource: connection object
@@ -140,6 +142,8 @@ class DbTable
 class DbTableOps
 {
     private ?mysqli $conn;
+
+    // use DbConnection;
 
     /**
      * Constructor,

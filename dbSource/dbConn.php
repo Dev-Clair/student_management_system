@@ -1,5 +1,5 @@
 <?php
-
+// trait DbConnection
 class DbConnection
 {
     private string $serverName;
