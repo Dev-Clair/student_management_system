@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Submits Form Data
         $regNo = time();
         $studentValidInputs['regno.'] = $regNo; // Assign registration number
-        var_dump($studentValidInputs);
         $databaseName = "student";
         $conn = tableOpConnection($databaseName);
         $tableName = $databaseName . "." . $studentValidInputs['coursename'];
@@ -282,8 +281,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                         <td><?php echo $row["regno."]; ?></td>
                         <td><?php echo $row["coursename"]; ?></td>
                         <td class="btn-group">
-                            <a href="update.php?studentid=<?php echo $row["regno."]; ?>" class="btn btn-primary btn-sm ms-2">Update</a>
-                            <a href="admin.php?action=delete&studentid=<?php echo $row["regno."]; ?>" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="update.php?studentid=<?php echo $row["regno."]; ?>&coursename=<?php echo $row["coursename"]; ?>" class="btn btn-primary btn-sm ms-2">Update</a>
+                            <a href="delete.php?studentid=<?php echo $row["regno."]; ?>&coursename=<?php echo $row["coursename"]; ?>" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
                 <?php

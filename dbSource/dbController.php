@@ -393,7 +393,7 @@ class DbTableOps
         return $status;
     }
 
-    public function deleteSingleRecord(string $tableName, string $fieldName, string $fieldValue): bool
+    public function deleteRecord(string $tableName, string $fieldName, string $fieldValue): bool
     {
         if (!$this->conn instanceof mysqli) {
             throw new Exception("No database connection available.");
