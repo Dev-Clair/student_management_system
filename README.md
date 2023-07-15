@@ -6,8 +6,8 @@ The Student Grade Management System is a simple web application built using PHP,
 
 - Add new students with their name, class, registration number -assigned internally using the php in-built time() function.
 - View a list of all students with their details.
-- View the coursename and modules offered by each student.
-- Add student grade and review performance.
+- Add and update modules and chapters offered by each student.
+- Add student grade per module and review performance.
 - Delete student's record.
 - Update student's information.
 

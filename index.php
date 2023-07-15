@@ -4,19 +4,19 @@ session_start();
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $userinputs = []; // Declare an empty  array to store form field values
-  $loginStatus = false; // Declare and initialize loginSttus to false
   if (filter_has_var(INPUT_POST, 'loginForm')) {
+    $userinputs = []; // Declare an empty array to store form field values
+    $errors = []; // Declare an empty error array variable
+    $loginStatus = false; // Declare and initialize loginStatus to false
     // Login Form Processing
 
-    /** Login-ID field */
-    $regpattern = '/^[A-Z][a-z]{2}[\d]{4}$/';
-    $loginID = filter_input(INPUT_POST, 'loginID', FILTER_VALIDATE_REGEXP, array(
-      'options' => array('regexp' => $regpattern)
-    ));
+    /**Email field */
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
-    if ($loginID !== false && $loginID !== null) {
-      $userinputs['loginID'] = $loginID;
+    if ($email !== false && $email !== null) {
+      $userinputs['email'] = $email;
+    } else {
+      $errors['email'] = "Invalid Email Address";
     }
 
     /** Password field */
@@ -25,11 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve User Details from Database 
     $databaseName = "login";
     $conn = tableOpConnection($databaseName);
-    $record = $conn->retrieveSingleRecord("admin", "adminID", $loginID);
+    $record = $conn->retrieveSingleRecord("admin", "email", $email);
     $retrievedAdminID = $record['adminID'];
+    $retrievedAdminEmail = $record['email'];
     $retrievedPassword = $record['password_hash'];
     // Verify Form Data
-    if ($retrievedAdminID === $userinputs['loginID'] && password_verify($userinputs['password'], $retrievedPassword)) {
+    if ($retrievedAdminEmail === $userinputs['email'] && password_verify($userinputs['password'], $retrievedPassword)) {
       // Start and save userID and loginStatus to session global variable
       $loginStatus = true;
       $_SESSION['userID'] = $retrievedAdminID;
@@ -41,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Redirect to index page with error message
     $errorMessage = "Invalid Details";
     $_SESSION['errorMessage'] = $errorMessage;
+    $_SESSION['errors'] = $errors;
     header('Location: index.php');
     exit();
   }
@@ -93,17 +95,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['successMessage']);
       }
       ?>
-      <!-- <button type="button" class="flex-right btn btn-success" onclick="executeRegistration()">Register</button> -->
+
       <form id="loginForm" name="loginForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <div class="form-group mb-3">
-          <label for="login" class="form-label">Login-ID:</label>
-          <input type="text" name="loginID" id="login" class="form-control" placeholder="Enter adminID" value="<?php echo htmlspecialchars($userinputs['loginID'] ?? ''); ?>" autocomplete="off" />
+          <label for="email" class="form-label">Email:</label>
+          <input type="email" name="email" id="email" class="form-control" placeholder="Enter email" value="" autocomplete="off" />
+          <?php if (isset($_SESSION['errors']['email'])) { ?>
+            <small class="error-message"><?php echo $_SESSION['errors']['email']; ?></small>
+          <?php } ?>
         </div>
         <div class="formgroup mb-3">
           <label for="password" class="form-label">Password:</label>
           <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" value="" autocomplete="off" />
         </div>
-        <button type="submit" name="loginForm" class="btn btn-primary">Log in</button>
+        <?php
+        unset($_SESSION['errors']);
+        ?>
+        <button type="submit" name="loginForm" class="btn btn-success">Log in</button>
+        <button type="button" onclick="window.location.href='register.php'" class="btn btn-primary">Register</button>
+      </form>
     </div>
   </section>
 

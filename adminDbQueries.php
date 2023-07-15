@@ -60,13 +60,13 @@ $newAdminData = array(
     "email" => $email,
     "password_hash" => $passwordhash
 );
-$conn = tableOpConnection($databaseName);
-$status = $conn->createRecords("admin", $newAdminData);
-if ($status) {
-    echo "User Created Successfully\n";
-} else {
-    echo "Process Failed! Cannot Create User\n";
-}
+// $conn = tableOpConnection($databaseName);
+// $status = $conn->createRecords("admin", $newAdminData);
+// if ($status) {
+//     echo "User Created Successfully\n";
+// } else {
+//     echo "Process Failed! Cannot Create User\n";
+// }
 
 /** ******* Grade Database Tables*******/
 

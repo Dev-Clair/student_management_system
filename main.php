@@ -17,7 +17,6 @@ require_once  __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gradeErrors = []; // Declare an error array variable
     $gradeValidInputs = []; // Declare an empty  array to store valid form fields
-    $gradeInvalidInputs = []; // Declare an empty  array to store invalid form fields
     if (filter_has_var(INPUT_POST, 'submitsgradeForm')) {
         // Grade Form Processing
 
@@ -31,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $gradeValidInputs['studentname'] = ucwords($studentname);
         } else {
             $gradeErrors['studentname'] = "Name cannot contain numbers or non-alpahbetic characters";
-            $gradeInvalidInputs['studentname'] = $studentname;
         }
 
         /**Coursename field */
@@ -42,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $gradeValidInputs['coursename'] = $coursename;
         } else {
             $gradeErrors['coursename'] = "Please select a valid course";
-            $gradeInvalidInputs['coursename'] = $coursename;
         }
 
         /**Modulename field */
@@ -55,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $gradeValidInputs['modulename'] = ucwords($modulename);
         } else {
             $gradeErrors['modulename'] = "Please select a valid module";
-            $gradeInvalidInputs['modulename'] = $modulename;
         }
 
         /** Chaptername field */
@@ -68,11 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $gradeValidInputs['chaptername'] = ucwords($chaptername);
         } else {
             $gradeErrors['chaptername'] = "Please enter a valid chapter name";
-            $gradeInvalidInputs['chaptername'] = $chaptername;
         }
 
         /** Exercise Score field */
-        $scoreoptions = array("min-value" => 0, "max-value" => 10);
+        $scoreoptions = array("min-value" => 0, "max-value" => 30);
         $exercisescore = filter_input(INPUT_POST, 'exercisescore', FILTER_VALIDATE_INT, array('options' => $scoreoptions));
 
         if ($exercisescore !== false && $exercisescore !== null) {
@@ -83,12 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $gradeErrors['exercisescore'] = "Please enter a score";
         } else {
             // Variable is invalid
-            $gradeErrors['exercisescore'] = "Please enter a valid score (0-10)";
-            $gradeInvalidInputs['exercisescore'] = $exercisescore;
+            $gradeErrors['exercisescore'] = "Please enter a valid score (0-30)";
         }
 
         /** Project Score field */
-        $scoreoptions = array("min-value" => 0, "max-value" => 100);
+        $scoreoptions = array("min-value" => 0, "max-value" => 70);
         $projectscore = filter_input(INPUT_POST, 'projectscore', FILTER_VALIDATE_INT, array('options' => $scoreoptions));
 
         if ($projectscore !== false && $projectscore !== null) {
@@ -99,8 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $gradeErrors['projectscore'] = "Please enter a score";
         } else {
             // Variable is invalid
-            $gradeErrors['projectscore'] = "Please enter a valid score (0-100)";
-            $gradeInvalidInputs['projectscore'] = $projectscore;
+            $gradeErrors['projectscore'] = "Please enter a valid score (0-70)";
         }
 
         if (!empty($gradeErrors)) {
@@ -109,7 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['errorMessage'] = $errorMessage;
             $_SESSION['gradeErrors'] = $gradeErrors;
             $_SESSION['gradeValidInputs'] = $gradeValidInputs;
-            $_SESSION['gradeInvalidInputs'] = $gradeInvalidInputs;
             header('Location: main.php');
             exit();
         }
@@ -158,9 +150,9 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
         <form id="gradeForm" name="gradeForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label class="form-group mb-2" for="studentname"><strong>Name:</strong></label>
-                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" value="<?php echo htmlspecialchars($_SESSION['gradeInvalidInputs']['studentname'] ?? ''); ?>" placeholder="Enter Name" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="studentname" name="studentname" value="" placeholder="Enter Name" autocomplete="off">
                 <?php if (isset($_SESSION['gradeErrors']['studentname'])) { ?>
-                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['studentname']); ?></small>
+                    <small class="error-message"><?php echo $_SESSION['gradeErrors']['studentname']; ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
@@ -174,7 +166,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                     <option value="cloud" disabled>Cloud</option>
                 </select>
                 <?php if (isset($_SESSION['gradeErrors']['coursename'])) { ?>
-                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['gradeErrors']['coursename']); ?></small>
+                    <small class="error-message"><?php echo $_SESSION['gradeErrors']['gradeErrors']['coursename']; ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
@@ -194,7 +186,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                     ?>
                 </select>
                 <?php if (isset($_SESION['gradeErrors']['modulename'])) { ?>
-                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['modulename']); ?></small>
+                    <small class="error-message"><?php echo $_SESSION['gradeErrors']['modulename']; ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
@@ -219,20 +211,19 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="exerciseScore"><strong>Exercise Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" value="<?php echo htmlspecialchars($_SESSION['gradeInvalidInputs']['exercisescore'] ?? ''); ?>" placeholder="Enter exercise score" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="exerciseScore" name="exerciseScore" value="" placeholder="Enter exercise score" autocomplete="off">
                 <?php if (isset($_SESSION['gradeErrors']['exercisescore'])) { ?>
-                    <small class="error-message"><?php echo htmlspecialchars($_SESSION['gradeErrors']['exercisescore']); ?></small>
+                    <small class="error-message"><?php echo $_SESSION['gradeErrors']['exercisescore']; ?></small>
                 <?php } ?>
             </div>
             <div class="form-group mb-2">
                 <label class="form-group mb-2" for="projectScore"><strong>Project Score:</strong></label>
-                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" value="<?php echo htmlspecialchars($_SESSION['gradeInvalidInputs']['projectscore'] ?? ''); ?>" placeholder="Enter project score" autocomplete="off">
+                <input type="text" class="mb-2 form-control" id="projectScore" name="projectScore" value="" placeholder="Enter project score" autocomplete="off">
                 <?php if (isset($_SESSION['gradeErrors']['projectscore'])) { ?>
                     <small class="error-message"><?php echo $_SERVER['gradeErrors']['projectscore']; ?></small>
                 <?php } ?>
             </div>
             <?php
-            unset($_SESSION['gradeInvalidInputs']);
             unset($_SESSION['gradeErrors']);
             ?>
             <div class="form-group float-end mb-4 pt-4">
