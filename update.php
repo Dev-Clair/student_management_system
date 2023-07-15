@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $databaseName = "student";
         $conn = tableOpConnection($databaseName);
         $tableName = $databaseName . "." . $updateValidInputs['coursename'];
-        $status = $conn->updateRecordFields($tableName, $studentValidInputs, $fieldName, $fieldValue);
+        $status = $conn->updateRecordFields("`$tableName`", $studentValidInputs, $fieldName, $fieldValue);
         if ($status === true) {
             // Redirect to admin page with success message
             $successMessage = "Record Updated Successfully";
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $databaseName = "student";
 $conn = tableOpConnection($databaseName);
-$status = $conn->validateFieldValue($tableName, $fieldName, $fieldValue);
+$status = $conn->validateFieldValue("`$tableName`", $fieldName, $fieldValue);
 if ($status !== true) {
     // Redirect to admin page with error message
     $errorMessage = "Error! Record Not Found.";
@@ -86,8 +86,9 @@ if ($status !== true) {
     header('Location: admin.php');
     exit();
 }
-$record = $conn->retrieveSingleRecord($tableName, $fieldName, $fieldValue);
-
+$record = $conn->retrieveSingleRecord("`$tableName`", $fieldName, $fieldValue);
+if (empty($record))
+    $record = [];
 ?>
 
 <?php
@@ -105,8 +106,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 
     <form id="updatestudentForm" name="updatestudentForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <div class="form-group">
+            <h3>Update Record for <?php echo $record['regno.']; ?></h3>
+        </div>
+        <div class="form-group">
             <label class="mb-2" for="studentname"><strong>Name:</strong></label>
-            <input type="text" class="form-control mb-2" id="studentname" name="studentname" value="" autocomplete="off" placeholder="Enter name" />
+            <input type="text" class="form-control mb-2" id="studentname" name="studentname" value="<?php echo $record['studentname']; ?>" autocomplete="off" placeholder="Enter name" />
             <?php if (isset($_SESSION['updateErrors']['studentname'])) { ?>
                 <small class="error-message"><?php echo $_SESSION['updateErrors']['studentname']; ?></small>
             <?php } ?>
@@ -115,11 +119,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
             <select class="form-control mb-2" id="coursename" name="coursename">
                 <option value="">--Click to Select--</option>
-                <option value="frontend" disabled>Frontend</option>
-                <option value="backend">Backend</option>
-                <option value="fullstack" disabled>Fullstack</option>
-                <option value="devops" disabled>Devops</option>
-                <option value="cloud" disabled>Cloud</option>
+                <option value="<?php if ($record['coursename'] === "frontend") echo "selected"; ?>" disabled>Frontend</option>
+                <option value="<?php if ($record['coursename'] === "backend") echo "selected"; ?>">Backend</option>
+                <option value="<?php if ($record['coursename'] === "fullstack") echo "selected"; ?>" disabled>Fullstack</option>
+                <option value="<?php if ($record['coursename'] === "devops") echo "selected"; ?>" disabled>Devops</option>
+                <option value="<?php if ($record['coursename'] === "cloud") echo "selected"; ?>" disabled>Cloud</option>
             </select>
             <?php if (isset($_SESSION['updateErrors']['coursename'])) { ?>
                 <small class="error-message"><?php echo $_SESSION['updateErrors']['coursename']; ?></small>
