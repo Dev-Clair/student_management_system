@@ -43,10 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /**Modulename field */
-        $regpattern = '/^[a-zA-Z\s]+$/';
-        $modulename = filter_input(INPUT_POST, 'modulename', FILTER_VALIDATE_REGEXP, array(
-            'options' => array('regexp' => $regpattern)
-        ));
+        $modulename = filter_input(INPUT_POST, 'modulename', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($modulename !== false && $modulename !== null) {
             $gradeValidInputs['modulename'] = ucwords($modulename);
@@ -55,16 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** Chaptername field */
-        // $regpattern = '/^[A-Za-z\s]+$/';
-        // $chaptername = filter_input(INPUT_POST, 'chaptername', FILTER_VALIDATE_REGEXP, array(
-        //     'options' => array('regexp' => $regpattern)
-        // ));
-
-        // if ($chaptername !== false && $chaptername !== null) {
-        //     $gradeValidInputs['chaptername'] = ucwords($chaptername);
-        // } else {
-        //     $gradeErrors['chaptername'] = "Please enter a valid chapter name";
-        // }
         $chaptername = filter_input(INPUT_POST, 'chaptername', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if ($chaptername !== false && $chaptername !== null) {
@@ -74,27 +61,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** Exercise Score field */
-        $scoreoptions = array("min-value" => 0, "max-value" => 30);
-        $exercisescore = filter_input(INPUT_POST, 'exercisescore', FILTER_VALIDATE_INT, array('options' => $scoreoptions));
+        $scoreoptions = array('lower-bound' => 0, 'upper-bound' => 30);
+        $exercisescore = filter_input(INPUT_POST, 'exercisescore', FILTER_VALIDATE_INT);
 
         if ($exercisescore !== false && $exercisescore !== null) {
-            // Variable is valid
-            $gradeValidInputs['exercisescore'] = $exercisescore;
+            if ($exercisescore < $scoreoptions['lower-bound'] || $exercisescore > $scoreoptions['upper-bound']) {
+                // Value is not within the allowed range
+                $gradeErrors['exercisescore'] = "Please enter a valid score (0-30)";
+            } else {
+                // Value is valid
+                $gradeValidInputs['exercisescore'] = $exercisescore;
+            }
         } elseif ($exercisescore === null) {
             // Variable not set
             $gradeErrors['exercisescore'] = "Please enter a score";
         } else {
-            // Variable is invalid
+            // Variable is not an integer
             $gradeErrors['exercisescore'] = "Please enter a valid score (0-30)";
         }
 
         /** Project Score field */
-        $scoreoptions = array("min-value" => 0, "max-value" => 70);
-        $projectscore = filter_input(INPUT_POST, 'projectscore', FILTER_VALIDATE_INT, array('options' => $scoreoptions));
+        $scoreoptions = array('lower-bound' => 0, 'upper-bound' => 70);
+        $projectscore = filter_input(INPUT_POST, 'projectscore', FILTER_VALIDATE_INT);
 
         if ($projectscore !== false && $projectscore !== null) {
-            // Variable is valid
-            $gradeValidInputs['projectscore'] = $projectscore;
+            if ($rojectcore < $scoreoptions['lower-bound'] || $projectscore > $scoreoptions['upper-bound']) {
+                // Value is not within the allowed range
+                $gradeErrors['projectscore'] = "Please enter a valid score (0-70)";
+            } else {
+                // Value is valid
+                $gradeValidInputs['projectscore'] = $projectscore;
+            }
         } elseif ($projectscore === null) {
             // Variable not set
             $gradeErrors['projectscore'] = "Please enter a score";

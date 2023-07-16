@@ -15,14 +15,15 @@ session_regenerate_id();
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
+// Provide Connection Object
+$databaseName = "student";
+$conn = tableOpConnection($databaseName);
+
 $fieldName = "regno.";
 $fieldValue = (int)$_GET['studentid'] ?? null;
 $tableName = $_GET['coursename'] ?? null;
 
-$databaseName = "student";
-$conn = tableOpConnection($databaseName);
-
-$status = $conn->validateFieldValue("`$tableName`", $fieldName, $fieldValue);
+$status = $conn->validateFieldValue($tableName, "`$fieldName`", $fieldValue);
 if ($status !== true) {
     // Redirect to admin page with error message
     $errorMessage = "Error! Cannot Delete Record";
@@ -30,7 +31,8 @@ if ($status !== true) {
     header('Location: admin.php');
     exit();
 }
-$status = $conn->deleteRecord("`$tableName`", $fieldName, $fieldValue);
+
+$status = $conn->deleteRecord($tableName, "`$fieldName`", $fieldValue);
 if ($status === true) {
     // Redirect to admin page with success message
     $successMessage = "Success! Record Deleted Successfully";

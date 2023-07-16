@@ -236,7 +236,13 @@ class DbTableOps
 
         $paramTypes = $this->getBindParamTypes([$fieldValue]);
         $sql_query = "SELECT * FROM $tableName WHERE $fieldName = ?";
+
         $stmt = $this->conn->prepare($sql_query);
+
+        if (!$stmt) {
+            throw new Exception("Error in prepared statement: " . $this->conn->error);
+        }
+
         $stmt->bind_param($paramTypes, $fieldValue);
         $stmt->execute();
         $result = $stmt->get_result();

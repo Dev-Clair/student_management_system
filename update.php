@@ -15,6 +15,10 @@ session_regenerate_id();
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
+// Provide Connection Object
+$databaseName = "student";
+$conn = tableOpConnection($databaseName);
+
 $fieldName = "regno.";
 $fieldValue = (int)$_GET['studentid'] ?? null;
 $tableName = $_GET['coursename'] ?? null;
@@ -48,19 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updateErrors['coursename'] = "Please select a valid course";
         }
 
-        if (!empty($studentErrors)) {
+        if (!empty($updateErrors)) {
             // Redirect to admin page with error message
             $errorMessage = "Invalid Entries";
             $_SESSION['errorMessage'] = $errorMessage;
-            $_SESSION['updateErrors'] = $studentUpdateErrors;
-            header('Location: admin.php');
+            $_SESSION['updateErrors'] = $updateErrors;
+            header('Location: update.php');
             exit();
         }
         // Submits Form Data
-        $databaseName = "student";
-        $conn = tableOpConnection($databaseName);
         $tableName = $databaseName . "." . $updateValidInputs['coursename'];
-        $status = $conn->updateRecordFields("`$tableName`", $studentValidInputs, $fieldName, $fieldValue);
+        $status = $conn->updateRecordFields($tableName, $updateValidInputs, "`$fieldName`", $fieldValue);
         if ($status === true) {
             // Redirect to admin page with success message
             $successMessage = "Record Updated Successfully";
@@ -76,9 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
-$databaseName = "student";
-$conn = tableOpConnection($databaseName);
-$status = $conn->validateFieldValue("`$tableName`", $fieldName, $fieldValue);
+$status = $conn->validateFieldValue($tableName, "`$fieldName`", $fieldValue);
 if ($status !== true) {
     // Redirect to admin page with error message
     $errorMessage = "Error! Record Not Found.";
@@ -86,16 +86,23 @@ if ($status !== true) {
     header('Location: admin.php');
     exit();
 }
-$record = $conn->retrieveSingleRecord("`$tableName`", $fieldName, $fieldValue);
-if (empty($record))
+
+$record = $conn->retrieveSingleRecord($tableName, "`$fieldName`", $fieldValue);
+if (empty($record)) {
     $record = [];
+    // Redirect to admin page with error message
+    $errorMessage = "Record is empty.";
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: admin.php');
+    exit();
+}
 ?>
 
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
 ?>
 
-<div class="container">
+<div class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
     <?php
     if (isset($_SESSION['errorMessage'])) {
         $errorMessage = $_SESSION['errorMessage'];
@@ -119,11 +126,11 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
             <select class="form-control mb-2" id="coursename" name="coursename">
                 <option value="">--Click to Select--</option>
-                <option value="<?php if ($record['coursename'] === "frontend") echo "selected"; ?>" disabled>Frontend</option>
-                <option value="<?php if ($record['coursename'] === "backend") echo "selected"; ?>">Backend</option>
-                <option value="<?php if ($record['coursename'] === "fullstack") echo "selected"; ?>" disabled>Fullstack</option>
-                <option value="<?php if ($record['coursename'] === "devops") echo "selected"; ?>" disabled>Devops</option>
-                <option value="<?php if ($record['coursename'] === "cloud") echo "selected"; ?>" disabled>Cloud</option>
+                <option value="frontend" disabled>Frontend</option>
+                <option value="backend">Backend</option>
+                <option value="fullstack" disabled>Fullstack</option>
+                <option value="devops" disabled>Devops</option>
+                <option value="cloud" disabled>Cloud</option>
             </select>
             <?php if (isset($_SESSION['updateErrors']['coursename'])) { ?>
                 <small class="error-message"><?php echo $_SESSION['updateErrors']['coursename']; ?></small>
