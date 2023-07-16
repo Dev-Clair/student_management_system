@@ -111,8 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Submits Form Data
         $databaseName = "grade";
         $conn = tableOpConnection($databaseName);
-        $tableName = $gradeValidInputs['coursename'];
-        $status = $conn->createRecords("$tableName", $gradeValidInputs);
+        $tableName = $databaseName . "." . $gradeValidInputs['coursename'];
+        $status = $conn->createRecords($tableName, $gradeValidInputs);
         if ($status) {
             // Redirect to main page with success message
             $successMessage = "Entries Added Successfully";

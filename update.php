@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         // Submits Form Data
         $tableName = $databaseName . "." . $updateValidInputs['coursename'];
-        $status = $conn->updateRecordFields($tableName, $updateValidInputs, "`$fieldName`", $fieldValue);
+        $status = $conn->updateRecord($tableName, $updateValidInputs, "`$fieldName`", $fieldValue);
         if ($status === true) {
             // Redirect to admin page with success message
             $successMessage = "Record Updated Successfully";
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
-$status = $conn->validateFieldValue($tableName, "`$fieldName`", $fieldValue);
+$status = $conn->validateRecord($tableName, "`$fieldName`", $fieldValue);
 if ($status !== true) {
     // Redirect to admin page with error message
     $errorMessage = "Error! Record Not Found.";

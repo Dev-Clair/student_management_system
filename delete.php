@@ -23,7 +23,7 @@ $fieldName = "regno.";
 $fieldValue = (int)$_GET['studentid'] ?? null;
 $tableName = $_GET['coursename'] ?? null;
 
-$status = $conn->validateFieldValue($tableName, "`$fieldName`", $fieldValue);
+$status = $conn->validateRecord($tableName, "`$fieldName`", $fieldValue);
 if ($status !== true) {
     // Redirect to admin page with error message
     $errorMessage = "Error! Cannot Delete Record";

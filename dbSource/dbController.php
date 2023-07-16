@@ -228,7 +228,7 @@ class DbTableOps
         return $status;
     }
 
-    public function validateFieldValue(string $tableName, $fieldName, $fieldValue): bool
+    public function validateRecord(string $tableName, $fieldName, $fieldValue): bool
     {
         if (!$this->conn instanceof mysqli) {
             throw new Exception("No database connection available.");
@@ -367,7 +367,7 @@ class DbTableOps
      * @param mixed $fieldValue Value of the field to match for the update
      * @return bool True if the update was successful, false otherwise
      */
-    public function updateRecordFields(string $tableName, array $sanitizedData, string $fieldName, $fieldValue): bool
+    public function updateRecord(string $tableName, array $sanitizedData, string $fieldName, $fieldValue): bool
     {
         if (!$this->conn instanceof mysqli) {
             throw new Exception("No database connection available.");

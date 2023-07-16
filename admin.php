@@ -119,8 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Submits Form Data
         $databaseName = "course";
         $conn = tableOpConnection($databaseName);
-        $tableName = "modules";
-        $status = $conn->createRecords("`$tableName`", $moduleValidInputs);
+        $tableName = $databaseName . "." . "modules";
+        $status = $conn->createRecords($tableName, $moduleValidInputs);
         if ($status) {
             // Redirect to admin page with success message
             $successMessage = "Entry Added Successfully";
@@ -197,8 +197,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Submits Form Data
         $databaseName = "module";
         $conn = tableOpConnection($databaseName);
-        $tableName = "chapters";
-        $status = $conn->createRecords("`$tableName`", $chapterValidInputs);
+        $tableName = $databaseName . "." . "chapters";
+        $status = $conn->createRecords($tableName, $chapterValidInputs);
         if ($status) {
             // Redirect to admin page with success message
             $successMessage = "Entries Added Successfully";
