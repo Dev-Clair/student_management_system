@@ -1,1 +1,0 @@
-userID|s:7:"Usr1995";loginStatus|b:1;studentInvalidInputs|a:2:{s:11:"studentname";b:0;s:10:"coursename";s:0:"";}errorMessage|s:15:"Invalid Entries";moduleErrors|a:1:{s:8:"moduleid";s:17:"Invalid Module ID";}moduleInvalidInputs|a:1:{s:8:"moduleid";b:0;}
