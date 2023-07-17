@@ -49,22 +49,8 @@ function tableOpConnection(string $databaseName): DbTableOps
 
 
 /** *******************************************Create Databases***************************************** */
-$databaseName = "grade";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "student";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "course";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "module";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "login";
-// print_r(dbConnection($databaseName));
-echo "\n";
+$databaseName = [""];
+foreach ($databaseName as $database) {
+    // print_r(dbConnection($database));
+    echo "\n";
+}
