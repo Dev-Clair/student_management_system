@@ -20,7 +20,7 @@ function dbConnection(string $databaseName): bool
         throw new Exception('Connection failed.');
     }
 
-    $sql_query = "CREATE DATABASE $databaseName";
+    $sql_query = "CREATE DATABASE IF NOT EXISTS $databaseName";
     // $sql_query = "DROP DATABASE $databaseName";
     if ($conn->query($sql_query) === true) {
         return true;
@@ -49,7 +49,7 @@ function tableOpConnection(string $databaseName): DbTableOps
 
 
 /** *******************************************Create Databases***************************************** */
-$databaseName = [""];
+$databaseName = ["student", "course", "grade", "module", "login"];
 foreach ($databaseName as $database) {
     // print_r(dbConnection($database));
     echo "\n";
