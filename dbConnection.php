@@ -46,3 +46,25 @@ function tableOpConnection(string $databaseName): DbTableOps
     $conn = new DbTableOps($conn);
     return $conn;
 }
+
+
+/** *******************************************Create Databases***************************************** */
+$databaseName = "grade";
+// print_r(dbConnection($databaseName));
+echo "\n";
+
+$databaseName = "student";
+// print_r(dbConnection($databaseName));
+echo "\n";
+
+$databaseName = "course";
+// print_r(dbConnection($databaseName));
+echo "\n";
+
+$databaseName = "module";
+// print_r(dbConnection($databaseName));
+echo "\n";
+
+$databaseName = "login";
+// print_r(dbConnection($databaseName));
+echo "\n";

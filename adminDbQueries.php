@@ -2,27 +2,6 @@
 // require resource: Connection Object
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
-/** *******************************************Create Databases***************************************** */
-$databaseName = "grade";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "student";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "course";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "module";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
-$databaseName = "login";
-// print_r(dbConnection($databaseName));
-echo "\n";
-
 /** *******************************************Create Tables***************************************** */
 /** ******* Login Database Table*******/
 
