@@ -10,7 +10,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-/******* Create Database ******/
+/******* Create/Drop Database ******/
 function dbConnection(string $databaseName): bool
 {
     $conn = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"]);
@@ -21,6 +21,7 @@ function dbConnection(string $databaseName): bool
     }
 
     $sql_query = "CREATE DATABASE $databaseName";
+    // $sql_query = "DROP DATABASE $databaseName";
     if ($conn->query($sql_query) === true) {
         return true;
     } else {
@@ -28,7 +29,7 @@ function dbConnection(string $databaseName): bool
     }
 }
 
-/******* Create Table ******/
+/******* Create/Drop/Truncate/Alter Table ******/
 function tableConnection(string $databaseName): DbTable
 {
     $conn = new DbConnection($_ENV["DATABASE_HOSTNAME"], $_ENV["DATABASE_USERNAME"], $_ENV["DATABASE_PASSWORD"], $databaseName);

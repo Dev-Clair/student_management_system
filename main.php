@@ -149,7 +149,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
     }
     ?>
     <div class="fixed-left left-container pt-2">
-        <h4>Student Grade</h4>
+        <h4>Grade Form</h4>
         <form id="gradeForm" name="gradeForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label class="form-group mb-2" for="studentname"><strong>Name:</strong></label>
@@ -238,33 +238,81 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
         <div class="flex">
             <div class="flex-left">
                 <strong>
-                    <h4>Student Report</h4>
+                    <h4>Grade Report</h4>
                 </strong>
             </div>
             <div class="flex-right">
                 <button class="btn btn-success btn-sm rounded" onclick="printStudentReport()">Print/Save Report</button>
             </div>
         </div>
+        <?php
+        // Create connections to each database (Since the database are located on the same server/machine and of the same software)
+        $gradeDb = "grade";
+        $connGrade = tableOpConnection($gradeDb);
+
+        // Define report table fields and join conditions
+        $tableName = "backend";
+
+        // Join tables and retrieve the report
+        try {
+            $report = $connGrade->retrieveAllRecords($tableName);
+        } catch (Exception $e) {
+            throw new Exception("Error! Processed Failed: " . $e->getMessage());
+        }
+        // Output the report
+        $studentPerformance = null;
+
+        function studentPerformance($totalGrade)
+        {
+            // Assigns student module performance based on student's total scores
+            switch (true) {
+                case $totalGrade >= 90 && $totalGrade <= 100:
+                    $studentPerformance = "EXCELLENT";
+                    break;
+                case $totalGrade >= 80 && $totalGrade <= 89:
+                    $studentPerformance = "VERY GOOD";
+                    break;
+                case $totalGrade >= 70 && $totalGrade <= 79:
+                    $studentPerformance = "GOOD";
+                    break;
+                case $totalGrade >= 60 && $totalGrade <= 69:
+                    $studentPerformance = "AVERAGE";
+                    break;
+                case $totalGrade >= 50 && $totalGrade <= 59:
+                    $studentPerformance = "CREDIT";
+                    break;
+                case $totalGrade >= 40 && $totalGrade <= 49:
+                    $studentPerformance = "PASS";
+                    break;
+                case $totalGrade >= 0 && $totalGrade <= 39:
+                    $studentPerformance = "FAIL";
+                    break;
+                default:
+                    $studentPerformance = "UNKNOWN";
+                    break;
+            }
+
+            return $studentPerformance;
+        }
+        ?>
         <div id="studentReport">
-            <!-- student report will be dynamically generated here -->
             <?php
-            if (!empty($validreports)) {
-                foreach ($validreports as $report) {
+            if (!empty($report)) {
+                foreach ($report as $row) {
             ?>
                     <div class="studentCard">
                         <div class="studentHeader">
-                            <div class="studentName"><strong>Name:</strong><?php echo ""; ?></div>
-                            <div class="studentRegNo"><strong>Reg. No.:</strong> <?php echo ""; ?></div>
-                            <div class="studentCourse"><strong>Course:</strong> <?php echo ""; ?></div>
-
-                            <div class="courseModules"><strong>Course Modules:</strong> <?php echo ""; ?>/6</div>
-                            <div class="moduleExerciseScores"><strong>Exercise Score:</strong> <?php echo ""; ?>/10</div>
-                            <div class="moduleProjectScores"><strong>Project Score:</strong> <?php echo ""; ?>/100</div>
-
-                            <div class="totalGrade"><strong>Total Grade:</strong> <?php echo "" ?></div>
-                            <div class="totalScore"><strong>Total Score:</strong> <?php echo "" ?></div>
+                            <div class="studentName"><strong>Name: </strong><?php echo $row["studentname"]; ?></div>
+                            <div class="courseName"><strong>Course: </strong> <?php echo ucwords($row["coursename"]); ?></div>
                         </div>
-                        <div class="studentPerformance"><strong>Overall Performance:</strong> <?php echo ""; ?></div>
+                        <div class="studentHeader">
+                            <div class="exerciseScore"><strong>Exercise Score: </strong> <?php echo $row["exercisescore"]; ?>/30</div>
+                            <div class="projectScore"><strong>Project Score: </strong> <?php echo $row["projectscore"]; ?>/70</div>
+                        </div>
+                        <div class="studentHeader">
+                            <div class="totalGrade"><strong>Total Grade: </strong> <?php echo ($row["exercisescore"] + $row["projectscore"]) ?>/100</div>
+                            <div class="studentPerformance"><strong>Overall Performance: </strong> <?php echo studentPerformance(($row["exercisescore"] + $row["projectscore"])); ?></div>
+                        </div>
                     </div>
             <?php
                 }
