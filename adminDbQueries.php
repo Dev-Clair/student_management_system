@@ -24,21 +24,21 @@ $databaseName = "login";
 // }
 
 /** Insert User/Admin Record into` admin` table */
-$adminID = "Usr" . strval(readline("Enter your Year of Birth: "));
-$adminname = ucwords(strval(readline("Enter Name: ")));
-$email = strtolower(strval(readline("Enter email: ")));
-$password = readline("Enter Password: ");
-$password_confirmation = readline("Re-Enter Password: ");
+// $adminID = "Usr" . strval(readline("Enter your Year of Birth: "));
+// $adminname = ucwords(strval(readline("Enter Name: ")));
+// $email = strtolower(strval(readline("Enter email: ")));
+// $password = readline("Enter Password: ");
+// $password_confirmation = readline("Re-Enter Password: ");
 
-$password = ($password === $password_confirmation) ? $password : throw new Exception("Password doesn't match");
-$passwordhash = password_hash($password, PASSWORD_BCRYPT);
+// $password = ($password === $password_confirmation) ? $password : throw new Exception("Password doesn't match");
+// $passwordhash = password_hash($password, PASSWORD_BCRYPT);
 
-$newAdminData = array(
-    "adminID" => $adminID,
-    "adminname" => $adminname,
-    "email" => $email,
-    "password_hash" => $passwordhash
-);
+// $newAdminData = array(
+//     "adminID" => $adminID,
+//     "adminname" => $adminname,
+//     "email" => $email,
+//     "password_hash" => $passwordhash
+// );
 // $conn = tableOpConnection($databaseName);
 // $status = $conn->createRecords("admin", $newAdminData);
 // if ($status) {
@@ -61,8 +61,7 @@ $fieldNames = "`studentname` VARCHAR(50) NOT NULL,
 $databaseName = "grade";
 // foreach ($tableNames as $tableName) {
 //     $conn = tableConnection($databaseName);
-//     $dbTable = new DbTable($conn);
-//     $result = $dbTable->createTable("`$tableName`", $fieldNames);
+//     $result = $conn->createTable("`$tableName`", $fieldNames);
 //     echo "Creating table $tableName: ";
 //     if ($result) {
 //         echo "Success\n";
@@ -82,8 +81,7 @@ $fieldNames = "`studentname` VARCHAR(50) NOT NULL,
 $databaseName = "student";
 // foreach ($tableNames as $tableName) {
 //     $conn = tableConnection($databaseName);
-//     $dbTable = new DbTable($conn);
-//     $result = $dbTable->createTable("`$tableName`", $fieldNames);
+//     $result = $conn->createTable("`$tableName`", $fieldNames);
 //     echo "Creating table $tableName: ";
 //     if ($result) {
 //         echo "Success\n";
@@ -102,8 +100,7 @@ $fieldNames = "`coursename` VARCHAR(100) NOT NULL,
 
 $databaseName = "course";
 // $conn = tableConnection($databaseName);
-// $dbTable = new DbTable($conn);
-// $result = $dbTable->createTable("`$tableName`", $fieldNames);
+// $result = $conn->createTable("`$tableName`", $fieldNames);
 // if ($result) {
 //         echo "Success\n";
 //     } else {
@@ -120,8 +117,7 @@ $fieldNames = "`modulename` VARCHAR(100) NOT NULL,
 
 // $databaseName = "module";
 // $conn = tableConnection($databaseName);
-// $dbTable = new DbTable($conn);
-// $result = $dbTable->createTable("`$tableName`", $fieldNames);
+// $result = $conn->createTable("`$tableName`", $fieldNames);
 // if ($result) {
 //     echo "Success\n";
 // } else {
@@ -134,8 +130,7 @@ $databaseName = "module";
 $tableName = "chapters";
 $alterStatement = "ADD COLUMN `coursename` VARCHAR(100) NOT NULL FIRST";
 // $conn = tableConnection($databaseName);
-// $dbTable = new DbTable($conn);
-// $result = $dbTable->alterTable("`$tableName`", $alterStatement);
+// $result = $conn->alterTable("`$tableName`", $alterStatement);
 
 
 /** *******************************************Truncate Tables***************************************** */

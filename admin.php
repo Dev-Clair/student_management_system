@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /** ChapterID field */
-        $regpattern = '/^[a-zA-Z-]{3}[\d]{1}\.[a-zA-Z-][\d]{1,2}[:]$/';
+        $regpattern = '/^[a-zA-Z-]{3}[\d]{1}\.[a-zA-Z-]{1}[\d]{1}[:]$/';
         $chapterid = filter_input(INPUT_POST, 'chapterid', FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regpattern)
         ));
@@ -266,7 +266,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
             // $conn = new DbTable($conn);
             // $tableNames = $conn->retrieveTableNames($databaseName);
             // $tableName = $tableNames[1];
-            $tableName = "backend"; //  Hardcoded, will be mproved in the future using ajax
+            $tableName = "backend"; //  Hardcoded, will be improved in the future using ajax
             // displays table based on tablename
             $conn = tableOpConnection($databaseName);
             $records = $conn->retrieveAllRecords("$tableName");
@@ -368,7 +368,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                     </div>
                     <div class="form-group mb-2">
                         <label class="mb-2" for="moduleid"><strong>Module ID:</strong></label>
-                        <input type="text" class="form-control mb-2" id="moduleid" name="moduleid" value="" autocomplete="off" placeholder="Enter module ID" />
+                        <input type="text" class="form-control mb-2" id="moduleid" name="moduleid" value="" autocomplete="off" placeholder="Enter module ID e.g: Module 01:" />
                         <?php if (isset($_SESSION['moduleErrors']['moduleid'])) { ?>
                             <small class="error-message"><?php echo $_SESSION['moduleErrors']['moduleid']; ?></small>
                         <?php } ?>
@@ -436,7 +436,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
                     </div>
                     <div class="form-group">
                         <label class="mb-2" for="chapterid"><strong>Chapter ID:</strong></label>
-                        <input type="text" class="form-control mb-2" id="chapterid" name="chapterid" value="" autocomplete="off" placeholder="Enter chapter ID" />
+                        <input type="text" class="form-control mb-2" id="chapterid" name="chapterid" value="" autocomplete="off" placeholder="Enter chapter ID e.g: PHP2.C3:" />
                         <?php if (isset($_SESSION['chapterErrors']['chapterid'])) { ?>
                             <small class="error-message"><?php echo $_SESSION['chapterErrors']['chapterid']; ?></small>
                         <?php } ?>

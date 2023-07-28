@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($email !== false && $email !== null) {
             //This can be improved by using an email-API validator to check if the email is valid and allowed
-            $validUserInputs['email'] = $name;
+            $validUserInputs['email'] = $email;
         } else {
             $errors['email'] = "Please Enter a valid email";
         }
