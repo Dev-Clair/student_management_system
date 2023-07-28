@@ -1,155 +1,122 @@
 <?php
+session_start();
 
-// Import file for cleaning, validating  and processing userinput
-require_once "form_handler.php";
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
-$filePath = __DIR__ . DIRECTORY_SEPARATOR . 'database.json';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (filter_has_var(INPUT_POST, 'loginForm')) {
+    $userinputs = []; // Declare an empty array to store form field values
+    $errors = []; // Declare an empty error array variable
+    $loginStatus = false; // Declare and initialize loginStatus to false
+    // Login Form Processing
 
-// Check if the delete action is requested
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['regNo'])) {
-    $regNo = $_GET['regNo'];
+    /**Email field */
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
-    // Search for the member with the matching registration number
-    foreach ($members as $key => $member) {
-        if ($member['regNo'] == $regNo) {
-            // Remove the existing member record
-            unset($members[$key]);
-            break;
-        }
+    if ($email !== false && $email !== null) {
+      $userinputs['email'] = $email;
+    } else {
+      $errors['email'] = "Invalid Email Address";
     }
 
-    // Save the updated records back to the file
-    $updatedRecord = json_encode($members, JSON_PRETTY_PRINT);
-    file_put_contents($filePath, $updatedRecord);
+    /** Password field */
+    $userinputs['password'] = $_POST['password'];
 
-    // Redirect back to index.php
-    $address = 'index.php';
-    redirect_to($address);
-    exit;
+    // Retrieve User Details from Database 
+    $databaseName = "login";
+    $conn = tableOpConnection($databaseName);
+    $record = $conn->retrieveSingleRecord("admin", "email", $email);
+    $retrievedAdminID = $record['adminID'];
+    $retrievedAdminEmail = $record['email'];
+    $retrievedPassword = $record['password_hash'];
+    // Verify Form Data
+    if ($retrievedAdminEmail === $userinputs['email'] && password_verify($userinputs['password'], $retrievedPassword)) {
+      // Start and save userID and loginStatus to session global variable
+      $loginStatus = true;
+      $_SESSION['userID'] = $retrievedAdminID;
+      $_SESSION['loginStatus'] = $loginStatus;
+      // Redirect to main page
+      header('Location: main.php');
+      exit();
+    }
+    // Redirect to index page with error message
+    $errorMessage = "Invalid Details";
+    $_SESSION['errorMessage'] = $errorMessage;
+    $_SESSION['errors'] = $errors;
+    header('Location: index.php');
+    exit();
+  }
+  // Redirect to index page with error message
+  $errorMessage = "Error! Process failed, Please try again.";
+  $_SESSION['errorMessage'] = $errorMessage;
+  header('Location: index.php');
+  exit();
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <title>Student Records</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <title>Log in</title>
 </head>
 
-<body class="my-5 mb-5">
-    <?php
-    if (isset($_GET['success'])) {
-        if ($_GET['success'] == 1)
-            // echo success message to user:
-            echo "Success!";
-    }
-    ?>
+<body class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
+  <header class="flex fixed-top bg-secondary my-1 py-3">
+    <!-- Nav -->
+    <nav class="flex-left btn-grp">
+      <a href="./academics.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>ACADEMICS</strong></a>
+      <a href="./about.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>ABOUT US</strong></a>
+      <a href="./units.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>UNITS</strong></a>
+      <a href="./research.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>RESEARCH</strong></a>
+      <a href="./resources.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>RESOURCES</strong></a>
+      <a href="./donations.php" class="btn text-white ml-5 mr-5" onclick="event.preventDefault()"><strong>ACADEMY</strong></a>
+    </nav>
+  </header>
 
-    <div class="container">
-        <div class="float-end mt-2">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newStudentModal">
-                New Student
-            </button>
+  <!--Login  Form -->
+  <section>
+    <div class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
+      <h1 class="mb-4">Log in</h1>
+      <?php
+      if (isset($_SESSION['errorMessage'])) {
+        $errorMessage = $_SESSION['errorMessage'];
+        echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+        unset($_SESSION['errorMessage']);
+      }
+
+      if (isset($_SESSION['successMessage'])) {
+        $successMessage = $_SESSION['successMessage'];
+        echo '<div class="alert alert-success">' . $successMessage . '</div>';
+        unset($_SESSION['successMessage']);
+      }
+      ?>
+
+      <form id="loginForm" name="loginForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <div class="form-group mb-3">
+          <label for="email" class="form-label">Email:</label>
+          <input type="email" name="email" id="email" class="form-control" placeholder="Enter email" value="" autocomplete="off" />
+          <?php if (isset($_SESSION['errors']['email'])) { ?>
+            <small class="error-message"><?php echo $_SESSION['errors']['email']; ?></small>
+          <?php } ?>
         </div>
+        <div class="formgroup mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" value="" autocomplete="off" />
+        </div>
+        <?php
+        unset($_SESSION['errors']);
+        ?>
+        <button type="submit" name="loginForm" class="btn btn-success">Log in</button>
+        <button type="button" onclick="window.location.href='register.php'" class="btn btn-primary">Register</button>
+      </form>
     </div>
+  </section>
 
-    <section class="wrapper-main">
-        <!-- List student record -->
-        <div class="container table-wrapper">
-            <table class="table table-striped table-bordered mt-4">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>S/n</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Reg. No.</th>
-                        <th>Grade</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if (!empty($members)) {
-                        $count = 0;
-                        foreach ($members as $row) {
-                            $count++;
-                    ?>
-                            <tr>
-                                <td><?php echo $count; ?></td>
-                                <td><?php echo $row["name"]; ?></td>
-                                <td><?php echo $row["class"]; ?></td>
-                                <td><?php echo $row["regNo"]; ?></td>
-                                <td><?php echo $row["grade"]; ?></td>
-                                <td>
-                                    <a href="update.php?regNo=<?php echo $row["regNo"]; ?>" class="btn btn-primary btn-sm">Update</a>
-                                    <a href="index.php?action=delete&regNo=<?php echo $row["regNo"]; ?>" class="btn btn-danger btn-sm">Delete</a>
-                                </td>
-                            </tr>
-                        <?php
-                        }
-                    } else {
-                        ?>
-                        <tr>
-                            <td colspan="6">No records found.</td>
-                        </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- New Student Modal -->
-    <div class="modal fade" id="newStudentModal" tabindex="-1" aria-labelledby="newStudentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newStudentModalLabel"><strong>New Student Record</strong> </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="form_handler.php">
-                        <!-- Name Field -->
-                        <div>
-                            <label for="name" class="form-label"><strong>Name:</strong></label>
-                            <input type="text" class="form-control" id="name" name="name" autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <p><em>First and Last Names Only</em> </p>
-                        </div>
-                        <!-- Class Field -->
-                        <div>
-                            <label for="class" class="form-label"><strong>Class:</strong></label>
-                            <input type="text" class="form-control" id="class" name="class" autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <p><em>Stem | Commerce | Art</em> </p>
-                        </div>
-                        <!-- Grade Field -->
-                        <div class="mb-3">
-                            <label for="grade" class="form-label">
-                                <strong>Grade:</strong>
-                            </label>
-                            <input type="number" class="form-control" id="grade" name="grade" autocomplete="off">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+  <?php
+  require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/footer.php';
+  ?>

@@ -1,118 +1,150 @@
 <?php
-// Import file containing functions for validating userinput
-require_once "validate_userinput.php";
+session_start(); // Starts session for current script
+// Retrieve Session Variables and verify loginStatus
+$userID = $_SESSION['userID'];
+$loginStatus = $_SESSION['loginStatus'];
+if ($userID === null && $loginStatus === null) {
+    // Redirect to login page withinvalid login status
+    $errorMessage = "Invalid Login Status! Please login again.";
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: index.php');
+    exit();
+}
+session_regenerate_id();
 
-$filePath = __DIR__ . DIRECTORY_SEPARATOR . 'database.json';
+// require resource: Connection Object
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'dbConnection.php';
 
-// Read the database file
-$data = file_get_contents($filePath);
-$members = json_decode($data, true);
+// Provide Connection Object
+$databaseName = "student";
+$conn = tableOpConnection($databaseName);
 
-// Check if the form is submitted
+$fieldName = "regno.";
+$fieldValue = (int)$_GET['studentid'] ?? null;
+$tableName = $_GET['coursename'] ?? null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the form data and clean the values using clean_name/class/grade functions
-    $regNo = $_POST['regNo'];
-    $name = clean_name($_POST['name']);
-    $class = clean_class($_POST['class']);
-    $grade = clean_grade($_POST['grade']);
+    /** ADD STUDENT FORM */
+    if (filter_has_var(INPUT_POST, 'updatestudentForm')) {
+        // Student Form Processing
+        $updateErrors = []; // Declare an error array variable
+        $updateValidInputs = []; // Declare an empty  array to store valid form fields
 
-    // Revalidate userinput using the validate_name/class/grade functions
-    if (!validate_name($name) || !validate_class($class) || !validate_grade($grade)) {
-        // Display error message and redirect to index.php after 5 seconds
-        header('Refresh: 5; URL=update.php');
-        echo "Oops! Something went wrong and we couldn't update the record.\nMake sure you follow the help-info and grade must be between 0-10 when you try again";
-        exit;
-    }
+        /** Studentname field */
+        $regpattern = '/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/';
+        $studentname = filter_input(INPUT_POST, 'studentname', FILTER_VALIDATE_REGEXP, array(
+            'options' => array('regexp' => $regpattern)
+        ));
 
-    // Search for the member with the matching registration number
-    foreach ($members as $key => $member) {
-        if ($member['regNo'] == $regNo) {
-            // Update the member record
-            $members[$key]['name'] = $name;
-            $members[$key]['class'] = $class;
-            $members[$key]['grade'] = $grade;
-            break;
+        if ($studentname !== false && $studentname !== null) {
+            $updateValidInputs['studentname'] = ucwords($studentname);
+        } else {
+            $updateErrors['studentname'] = "Name cannot contain numbers or non-alphabetic characters";
+        }
+
+        /**Coursename field */
+        $courseoptions = array("frontend", "backend", "fullstack", "devops", "cloud");
+        $coursename = filter_input(INPUT_POST, 'coursename', FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($coursename !== null && in_array($coursename, $courseoptions)) {
+            $updateValidInputs['coursename'] = $coursename;
+        } else {
+            $updateErrors['coursename'] = "Please select a valid course";
+        }
+
+        if (!empty($updateErrors)) {
+            // Redirect to admin page with error message
+            $errorMessage = "Invalid Entries";
+            $_SESSION['errorMessage'] = $errorMessage;
+            $_SESSION['updateErrors'] = $updateErrors;
+            header('Location: update.php');
+            exit();
+        }
+        // Submits Form Data
+        $tableName = $databaseName . "." . $updateValidInputs['coursename'];
+        $status = $conn->updateRecord($tableName, $updateValidInputs, "`$fieldName`", $fieldValue);
+        if ($status === true) {
+            // Redirect to admin page with success message
+            $successMessage = "Record Updated Successfully";
+            $_SESSION['successMessage'] = $successMessage;
+            header('Location: admin.php');
+            exit();
         }
     }
-
-    // Save the updated records back to the file
-    $updatedRecord = json_encode($members, JSON_PRETTY_PRINT);
-    file_put_contents($filePath, $updatedRecord);
-
-    // Redirect back to index.php
-    $address = 'index.php?success=1';
-    redirect_to($address);
-    exit;
+    // Redirect to admin page with error message
+    $errorMessage = "Error! Process failed, Please try again.";
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: admin.php');
+    exit();
 }
 
-// Retrieve the registration number from the query string
-if (isset($_GET['regNo'])) {
-    $regNo = $_GET['regNo'];
+$status = $conn->validateRecord($tableName, "`$fieldName`", $fieldValue);
+if ($status !== true) {
+    // Redirect to admin page with error message
+    $errorMessage = "Error! Record Not Found.";
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: admin.php');
+    exit();
+}
 
-    // Search for the member with the matching registration number
-    foreach ($members as $member) {
-        if ($member['regNo'] == $regNo) {
-            $name = $member['name'];
-            $class = $member['class'];
-            $grade = $member['grade'];
-            break;
-        }
-    }
+$record = $conn->retrieveSingleRecord($tableName, "`$fieldName`", $fieldValue);
+if (empty($record)) {
+    $record = [];
+    // Redirect to admin page with error message
+    $errorMessage = "Record is empty.";
+    $_SESSION['errorMessage'] = $errorMessage;
+    header('Location: admin.php');
+    exit();
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/header.php';
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <title>Update Student</title>
-</head>
-
-<body class="my-5">
+<div class="container pt-4 pr-3 pb-4 pl-3 mt-4 mb-4">
     <?php
-    if (isset($_GET['success'])) {
-        if ($_GET['success'] == 1)
-            // echo success message to user:
-            echo "Success!";
+    if (isset($_SESSION['errorMessage'])) {
+        $errorMessage = $_SESSION['errorMessage'];
+        echo '<div class="alert alert-danger">' . $errorMessage . '</div>';
+        unset($_SESSION['errorMessage']);
     }
     ?>
-    <div class="container">
-        <h2><strong>Update Student Record</strong></h2>
-        <form method="post" action="update.php">
-            <!-- Hidden Field: contains student's registration number -->
-            <input type="hidden" name="regNo" value="<?php echo $regNo; ?>">
-            <!-- Name Field -->
-            <div>
-                <label for="name" class="form-label"><strong>Name:</strong></label>
-                <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" autocomplete="off">
-            </div>
-            <div class="mb-3">
-                <p><em>First and Last Names Only</em> </p>
-            </div>
-            <!-- Class Field -->
-            <div>
-                <label for="class" class="form-label"><strong>Class:</strong></label>
-                <input type="text" class="form-control" id="class" name="class" value="<?php echo $class; ?>" autocomplete="off">
-            </div>
-            <div class="mb-3">
-                <p><em>Stem | Commerce | Art</em> </p>
-            </div>
-            <!-- Grade Field -->
-            <div class="mb-3">
-                <label for="grade" class="form-label">
-                    <strong>Grade:</strong>
-                </label>
-                <input type="text" class="form-control" id="grade" name="grade" value="<?php echo $grade; ?>" autocomplete="off">
-            </div>
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <form id="updatestudentForm" name="updatestudentForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <div class="form-group">
+            <h3>Update Record for <?php echo $record['regno.']; ?></h3>
+        </div>
+        <div class="form-group">
+            <label class="mb-2" for="studentname"><strong>Name:</strong></label>
+            <input type="text" class="form-control mb-2" id="studentname" name="studentname" value="<?php echo $record['studentname']; ?>" autocomplete="off" placeholder="Enter name" />
+            <?php if (isset($_SESSION['updateErrors']['studentname'])) { ?>
+                <small class="error-message"><?php echo $_SESSION['updateErrors']['studentname']; ?></small>
+            <?php } ?>
+        </div>
+        <div class="form-group">
+            <label class="mb-2" for="coursename"><strong>Select Course:</strong></label>
+            <select class="form-control mb-2" id="coursename" name="coursename">
+                <option value="">--Click to Select--</option>
+                <option value="frontend" disabled>Frontend</option>
+                <option value="backend">Backend</option>
+                <option value="fullstack" disabled>Fullstack</option>
+                <option value="devops" disabled>Devops</option>
+                <option value="cloud" disabled>Cloud</option>
+            </select>
+            <?php if (isset($_SESSION['updateErrors']['coursename'])) { ?>
+                <small class="error-message"><?php echo $_SESSION['updateErrors']['coursename']; ?></small>
+            <?php } ?>
+        </div>
+        <?php
+        unset($_SESSION['updateErrors']);
+        ?>
+        <button type="submit" name="updatestudentForm" class="float-end btn btn-primary">
+            Submit
+        </button>
+    </form>
+</div>
 
-</html>
+<?php
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'inc/footer.php';
+?>

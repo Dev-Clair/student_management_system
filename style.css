@@ -1,21 +1,74 @@
-/* stylesheet.css */
+/* global styles */
 
-.container {
-  margin-right: auto;
-  margin-left: auto;
+.left-container {
+  flex: 1;
+  width: 40%;
+  margin-left: 10px;
+  margin-right: 10px;
+  float: left;
 }
 
-.float-end {
+.right-container {
+  flex: 1;
+  width: 60%;
+  margin-left: 10px;
+  margin-right: 10px;
   float: right;
 }
 
-.wrapper-main {
-  margin-top: 2rem;
+@media (max-width: 700px) {
+  .left-container,
+  .right-container {
+    width: 100%;
+    float: none;
+  }
+}
+
+/*indexstyles */
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-left {
+  text-align: left;
+}
+
+.flex-right {
+  text-align: right;
+}
+
+.modal-dialog {
+  width: 50%;
+  height: 500%;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+.modal-content {
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  flex-grow: 1;
+}
+
+.scrollable-container {
+  width: fit-content;
+  height: 550px;
+  overflow: auto;
 }
 
 .table-wrapper {
-  max-height: 700px;
-  /* overflow-y: auto; */
+  flex: 1;
+  /* overflow-x: auto;
+  overflow-y: auto; */
   text-align: center;
 }
 
@@ -33,10 +86,46 @@
   background-color: white;
 }
 
-.btn-warning {
+.table td:nth-child(3) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table td:nth-child(11) {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table td:nth-child(12) {
+  white-space: normal;
+  word-wrap: break-word;
+  max-height: 3em;
+  overflow: hidden;
+}
+
+.btn-group {
+  display: flex;
+  gap: 2px;
+}
+
+/* .btn {
+  color: #000;
+  padding: 3px 3px;
+  text-align: center;
+} */
+
+.btn-primary {
   color: #fff;
   background-color: #0d6efd;
   border-color: #0d6efd;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #0d6e0d;
+  border-color: #0d6e0d;
 }
 
 .btn-danger {
@@ -44,9 +133,56 @@
   background-color: #dc3545;
   border-color: #dc3545;
 }
+/* reportstyles */
 
-.btn-danger:hover {
-  color: #fff;
-  background-color: #c82333;
-  border-color: #bd2130;
+.studentCard {
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.studentHeader {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #0000ff;
+  gap: 5px;
+}
+
+.studentName {
+  text-align: left;
+}
+
+.studentCourse {
+  text-align: right;
+}
+
+.exerciseScore {
+  text-align: left;
+}
+
+.projectScore {
+  text-align: right;
+}
+
+.totalGrade {
+  text-align: left;
+}
+
+.studentPerformance {
+  text-align: right;
+}
+
+#studentReport {
+  height: 500px;
+  overflow: auto;
+}
+
+.error-message {
+  font-size: 12px;
+  color: red;
+}
+
+.success-message {
+  font-size: 12px;
+  color: green;
 }
